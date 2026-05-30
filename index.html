@@ -74,6 +74,15 @@ body{background:#000;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Rob
 /* Footer */
 footer{padding:20px 40px;text-align:center;font-size:14px;color:#fff;mix-blend-mode:difference}
 
+/* Modal */
+.modal-overlay{position:fixed;inset:0;z-index:100;background:rgba(0,0,0,.7);display:none;align-items:center;justify-content:center}
+.modal-overlay.open{display:flex}
+.modal{background:rgba(15,23,42,.95);backdrop-filter:blur(24px);border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:32px;max-width:500px;width:90%;max-height:70vh;overflow-y:auto;color:#fff}
+.modal h2{font-size:24px;margin-bottom:16px;color:#fff;mix-blend-mode:difference}
+.modal p{font-size:16px;line-height:1.6;color:#fff;mix-blend-mode:difference;white-space:pre-wrap}
+.modal-close{display:block;margin-top:20px;padding:10px 24px;border:1px solid #fff;background:transparent;color:#fff;font-size:14px;cursor:pointer;mix-blend-mode:difference;transition:.15s}
+.modal-close:hover{background:#fff;color:#000}
+
 @keyframes fadeSlideIn{0%{opacity:0;transform:translateY(-10px)}100%{opacity:1;transform:translateY(0)}}
 </style>
 </head>
@@ -87,9 +96,9 @@ footer{padding:20px 40px;text-align:center;font-size:14px;color:#fff;mix-blend-m
       <a href="#" class="active" data-tab="coderwarz">CODERWARZ</a>
       <a href="#" data-tab="dayornight">DAYORNIGHT</a>
     </nav>
-    <button class="btn-signin">
-      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px"><path d="m10 17 5-5-5-5"/><path d="M15 12H3"/><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/></svg>
-      Sign in
+    <button class="btn-signin" id="infoBtn">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+      Info
     </button>
     <button class="btn-menu" id="mobileMenuBtn">
       <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
@@ -110,9 +119,9 @@ footer{padding:20px 40px;text-align:center;font-size:14px;color:#fff;mix-blend-m
         <a href="#" class="active" data-tab="coderwarz">CODERWARZ</a>
         <a href="#" data-tab="dayornight">DAYORNIGHT</a>
         <div class="mobile-divider">
-          <a href="#" class="mobile-signin">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px"><path d="m10 17 5-5-5-5"/><path d="M15 12H3"/><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/></svg>
-            Sign in
+          <a href="#" class="mobile-signin" id="infoBtnMobile">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+            Info
           </a>
         </div>
       </nav>
@@ -207,6 +216,15 @@ footer{padding:20px 40px;text-align:center;font-size:14px;color:#fff;mix-blend-m
   <div class="arrow" id="next">&#8594;</div>
 </section>
 
+<!-- Info Modal -->
+<div class="modal-overlay" id="infoModal">
+  <div class="modal">
+    <h2 id="modalTitle">Updates</h2>
+    <p id="modalContent">Loading...</p>
+    <button class="modal-close" id="modalClose">Close</button>
+  </div>
+</div>
+
 <footer>
   &copy; Coderwarz - DayorNight - Neverendever.com 2026
 </footer>
@@ -294,6 +312,25 @@ function closeMenu(){
     document.body.style.overflow="";
   },300);
 }
+
+// Info modal
+async function openInfo(){
+  const modal=document.getElementById("infoModal");
+  document.getElementById("modalContent").textContent="Loading...";
+  modal.classList.add("open");
+  try{
+    const r=await fetch("update.json");
+    const data=await r.json();
+    document.getElementById("modalContent").textContent=data.content||data.message||JSON.stringify(data);
+  }catch(e){
+    document.getElementById("modalContent").textContent="DEV LOGS SOON";
+  }
+}
+function closeInfo(){document.getElementById("infoModal").classList.remove("open")}
+document.getElementById("infoBtn").addEventListener("click",openInfo);
+document.getElementById("infoBtnMobile").addEventListener("click",e=>{e.preventDefault();closeMenu();openInfo()});
+document.getElementById("modalClose").addEventListener("click",closeInfo);
+document.getElementById("infoModal").addEventListener("click",e=>{if(e.target===e.currentTarget)closeInfo()});
 
 menuBtn.addEventListener("click",openMenu);
 closeBtn.addEventListener("click",closeMenu);
