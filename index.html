@@ -25,7 +25,7 @@ body{background:#000;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Rob
 .nav-desktop a{color:#94a3b8;text-decoration:none;font-size:14px;transition:color .2s}
 .nav-desktop a:hover{color:#fff}
 .nav-desktop a.active{color:#fff}
-.btn-signin{display:none;align-items:center;gap:8px;border-radius:8px;padding:8px 12px;font-size:14px;color:#cbd5e1;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.05);cursor:pointer;transition:.2s}
+.btn-signin{display:none;align-items:center;gap:8px;border-radius:8px;padding:8px 12px;font-size:14px;color:#cbd5e1;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.05);cursor:pointer;transition:.2s;text-decoration:none}
 @media(min-width:640px){.btn-signin{display:inline-flex}}
 .btn-signin:hover{background:rgba(255,255,255,.1)}
 .btn-menu{display:flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:8px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.05);color:#cbd5e1;cursor:pointer;transition:.2s}
@@ -36,7 +36,7 @@ body{background:#000;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Rob
 /* Mobile Menu */
 .mobile-menu{position:fixed;inset:0;z-index:50;display:none}
 .mobile-overlay{position:absolute;inset:0;background:rgba(2,6,23,.8);backdrop-filter:blur(16px);opacity:0;transition:opacity .3s}
-.mobile-panel{position:absolute;right:0;top:0;bottom:0;width:100%;max-width:384px;background:rgba(15,23,42,.95);backdrop-filter:blur(24px);border-left:1px solid rgba(255,255,255,.1);box-shadow:0 25px 50px -12px rgba(0,0,0,.5);transform:translateX(100%);transition:transform .3s}
+.mobile-panel{position:absolute;right:0;top:0;bottom:0;width:100%;max-width:384px;background:rgba(15,23,42,.95);backdrop-filter:blur(24px);border-left:1px solid rgba(255,255,255,.1);box-shadow:0 25px 50px rgba(0,0,0,.3);transform:translateX(100%);transition:transform .3s}
 .mobile-header{display:flex;align-items:center;justify-content:space-between;padding:16px;border-bottom:1px solid rgba(255,255,255,.1)}
 .mobile-header span{font-size:14px;color:#cbd5e1}
 .btn-close{display:flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:8px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.05);color:#cbd5e1;cursor:pointer;transition:.2s}
@@ -46,7 +46,7 @@ body{background:#000;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Rob
 .mobile-nav a:hover{color:#fff;background:rgba(255,255,255,.05)}
 .mobile-nav a.active{color:#fff}
 .mobile-divider{padding-top:16px;margin-top:16px;border-top:1px solid rgba(255,255,255,.1)}
-.mobile-signin{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:12px;border-radius:8px;font-size:16px;font-weight:500;color:#fff;background:#65a30d;text-decoration:none;transition:.2s}
+.mobile-signin{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:12px;border-radius:8px;font-size:16px;font-weight:500;color:#fff;background:#65a30d;text-decoration:none;cursor:pointer;transition:.2s}
 .mobile-signin:hover{background:#4d7c0f}
 
 /* Gradient Blur */
@@ -97,11 +97,11 @@ footer{padding:20px 40px;text-align:center;font-size:14px;color:#fff;mix-blend-m
       <a href="https://erl-real.github.io/daornight/" data-tab="dayornight">DAYORNIGHT</a>
     </nav>
     <button class="btn-signin" id="infoBtn">
-      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
       Info
     </button>
     <button class="btn-menu" id="mobileMenuBtn">
-      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
     </button>
   </div>
 
@@ -112,7 +112,7 @@ footer{padding:20px 40px;text-align:center;font-size:14px;color:#fff;mix-blend-m
       <div class="mobile-header">
         <span>Menu</span>
         <button class="btn-close" id="mobileMenuClose">
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="width:20px;height:20px"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
         </button>
       </div>
       <nav class="mobile-nav">
@@ -120,7 +120,7 @@ footer{padding:20px 40px;text-align:center;font-size:14px;color:#fff;mix-blend-m
         <a href="https://erl-real.github.io/daornight/" data-tab="dayornight">DAYORNIGHT</a>
         <div class="mobile-divider">
           <a href="#" class="mobile-signin" id="infoBtnMobile">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
             Info
           </a>
         </div>
@@ -271,6 +271,10 @@ checkBuilds();
 
 document.querySelectorAll("[data-tab]").forEach(el=>{
   el.addEventListener("click",e=>{
+    // Allow external links to work normally
+    if(el.href && (el.href.startsWith("http://") || el.href.startsWith("https://"))){
+      return;
+    }
     e.preventDefault();
     current=el.dataset.tab;
     updateView();
