@@ -620,6 +620,20 @@ body.impact{animation:impact .34s ease}
 .nc-item .nmsg{font-size:12.5px;line-height:1.35;margin-top:2px}
 .nc-item .nwhen{font-size:10px;color:rgba(255,255,255,.42);font-family:var(--mono);margin-top:3px}
 .nc-empty{font-size:12.5px;color:rgba(255,255,255,.55);text-align:center;padding:18px 10px}
+.nc-actions{display:flex;gap:2px;align-items:center}
+.nc-setrow{display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.07);border-radius:15px;padding:11px 12px;margin-bottom:8px;cursor:pointer;font-size:13px;color:#fff}
+.nc-setrow input{width:18px;height:18px;accent-color:#0a84ff;flex:0 0 auto;cursor:pointer}
+.nc-setrow .t{flex:1}
+.nc-setrow .d{display:block;font-size:11px;color:rgba(255,255,255,.55);margin-top:1px}
+.nc-sethead{display:flex;align-items:center;gap:10px;margin:2px 2px 10px}
+.nc-back{background:none;border:0;color:#0a84ff;font-family:var(--sys);font-size:13px;font-weight:700;cursor:pointer;padding:4px 0}
+.nc-settitle{font-size:13px;font-weight:700;color:#fff}
+/* ══ DARK MODE — flips the iOS vars, whole game re-skins ══ */
+.screen.dark{
+  --bg:#0b0b0f;--bg2:#17171d;--ink:#f4f4f6;--ink2:#9c9ca6;--line:#2b2b32;
+  --accent:#0a84ff;--accent-ink:#ffffff;
+}
+.screen.dark .log .event-good,.screen.dark .up,.screen.dark .ticker-item.up{color:#30d158}
 .back-btn{margin-top:10px}
 .pipeline{display:flex;gap:5px;margin:6px 0;flex-wrap:wrap}
 .pipe-stage{flex:1;min-width:80px;border:.5px solid var(--line);padding:6px;background:color-mix(in srgb,var(--bg) 82%,transparent);font-size:10px;text-align:center;border-radius:10px}
@@ -655,7 +669,7 @@ body.impact{animation:impact .34s ease}
 
       <!-- ══ NOTIFICATION CENTER ══ -->
       <div class="noticenter" id="noticenter">
-        <div class="nc-head"><span>Notifications</span><button id="ncClear">Clear</button></div>
+        <div class="nc-head"><span>Notifications</span><span class="nc-actions"><button id="ncTheme" title="Toggle dark mode">🌙</button><button id="ncSettings" title="Notification settings">&#9881;</button><button id="ncClear">Clear</button></span></div>
         <div class="nc-list" id="ncList"></div>
       </div>
       <div id="eventOverlay" style="display:none;position:absolute;justify-content:center;align-items:center;z-index:65"></div>
@@ -675,7 +689,7 @@ const $ = id => document.getElementById(id);
 const phone=$("phone"), screen=$("screen"), toasts=$("toasts"),
       slapLayer=$("slapLayer"), redflash=$("redflash"), burstLayer=$("burstLayer"),
       notiBtn=$("notiBtn"), noticenter=$("noticenter"), ncList=$("ncList"),
-      ncBadge=$("ncBadge"), ncClear=$("ncClear");
+      ncBadge=$("ncBadge"), ncClear=$("ncClear"), ncSettings=$("ncSettings"), ncTheme=$("ncTheme");
 let timers=[];
 const wait=(fn,ms)=>timers.push(setTimeout(fn,ms));
 
@@ -726,7 +740,7 @@ function pushToast(b){
   window._notis.unshift({ico:b.ico,tint:b.tint,head:b.head||"Dope Wars",msg:b.msg,when:ncTime()});
   if(window._notis.length>10) window._notis.length=10;
   window._ncUnread=(window._ncUnread||0)+1; ncUpdateBadge();
-  if(noticenter.classList.contains("on")) ncRender();
+  if(noticenter.classList.contains("on")&&!window._ncSettings) ncRender();
   const slot=buildToast(b);
   slot.classList.add("noanim");
   slot.style.visibility="hidden";
@@ -777,8 +791,12 @@ function restack(){
 }
 /* ── notification center (top-right dropdown) ── */
 window._notis=[]; window._ncUnread=0;
+window._ncPrefs={good:true,bad:true,neutral:true};
+try{var _p=JSON.parse(localStorage.getItem("dwNotiPrefs"));if(_p)window._ncPrefs=Object.assign(window._ncPrefs,_p);}catch(e){}
+function ncSavePrefs(){try{localStorage.setItem("dwNotiPrefs",JSON.stringify(window._ncPrefs));}catch(e){}}
 function ncTime(){ return new Date().toLocaleTimeString([],{hour:"numeric",minute:"2-digit"}); }
 function ncRender(){
+  window._ncSettings=false;
   if(!ncList) return;
   if(!window._notis.length){ ncList.innerHTML=`<div class="nc-empty">No notifications yet.</div>`; return; }
   ncList.innerHTML=window._notis.map(n=>`
@@ -797,9 +815,40 @@ function ncOpen(){ ncRender(); noticenter.classList.add("on"); window._ncUnread=
 function ncClose(){ if(noticenter) noticenter.classList.remove("on"); }
 if(notiBtn) notiBtn.addEventListener("click",e=>{ e.stopPropagation(); noticenter.classList.contains("on")?ncClose():ncOpen(); });
 if(ncClear) ncClear.addEventListener("click",e=>{ e.stopPropagation(); window._notis=[]; ncRender(); });
+if(ncSettings) ncSettings.addEventListener("click",e=>{ e.stopPropagation(); ncRenderSettings(); });
+function ncRenderSettings(){
+  window._ncSettings=true;
+  if(!ncList) return;
+  const defs=[["good","Good news","Sales, payments and wins"],["bad","Warnings","Busts, losses and threats"],["neutral","Info","Travel, dates and general log"]];
+  const icons={good:"✅",bad:"🚨",neutral:"💬"};
+  ncList.innerHTML=`<div class="nc-sethead"><button class="nc-back" id="ncBack">‹ Back</button><span class="nc-settitle">Notification Settings</span></div>`+
+    defs.map(d=>`<label class="nc-setrow"><input type="checkbox" data-ntype="${d[0]}"${window._ncPrefs[d[0]]!==false?" checked":""}><span class="t">${icons[d[0]]} ${d[1]}<span class="d">${d[2]}</span></span></label>`).join("");
+}
+if(ncList&&!ncList._wired){
+  ncList._wired=true;
+  ncList.addEventListener("change",e=>{
+    const t=e.target&&e.target.dataset&&e.target.dataset.ntype;
+    if(t){window._ncPrefs[t]=e.target.checked;ncSavePrefs();}
+  });
+  ncList.addEventListener("click",e=>{if(e.target&&e.target.id==="ncBack"){ncRender();}});
+}
+if(noticenter) noticenter.addEventListener("click",e=>{e.stopPropagation();});
 screen.addEventListener("click",()=>{ if(noticenter.classList.contains("on")) ncClose(); });
+/* ── dark / light theme (moon / sun in notification center) ── */
+window._dwDark=false;
+try{window._dwDark=localStorage.getItem("dwTheme")==="dark";}catch(e){}
+function dwApplyTheme(){
+  const dark=window._dwDark===true;
+  if(screen) screen.classList.toggle("dark",dark);
+  const b=$("ncTheme"); if(b) b.textContent=dark?"☀":"🌙";
+  try{localStorage.setItem("dwTheme",dark?"dark":"light");}catch(e){}
+}
+if(ncTheme) ncTheme.addEventListener("click",e=>{e.stopPropagation();window._dwDark=!window._dwDark;dwApplyTheme();});
+dwApplyTheme();
 /* game log -> phone notification */
 window.pushGameLog=function(msg,type){
+  var t=type||"neutral";
+  if(window._ncPrefs&&window._ncPrefs[t]===false) return;
   const map={good:{ico:"✅",tint:"#34c759",head:"Dope Wars"},bad:{ico:"🚨",tint:"#ff3b30",head:"Dope Wars"},neutral:{ico:"💬",tint:"#007aff",head:"Dope Wars"}};
   const m=map[type]||map.neutral;
   pushToast({ico:m.ico,tint:m.tint,head:m.head,code:type?String(type).toUpperCase():"LOG",msg:msg,addr:"",ago:"now",flash:type==="bad"});
@@ -1071,7 +1120,8 @@ function renderSafehouse() {
       ${G.debt > 0 ? `Loan Shark debt grows 10% daily! Pay it off fast.` : "Debt is clear. Stack your cash."}
     </div>
     
-    <style>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>
       @keyframes gameToastIn{from{opacity:0}to{opacity:1}}
     </style>`;
 }

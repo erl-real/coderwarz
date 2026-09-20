@@ -424,5 +424,54 @@ closeBtn.addEventListener("click",closeMenu);
 overlay.addEventListener("click",closeMenu);
 </script>
 
+<style>
+#dw-phone-panel{position:fixed;z-index:120;left:50%;top:50%;pointer-events:none;opacity:0;transform:translate(-50%,calc(-50% + 60px));transition:opacity .3s ease,transform .45s cubic-bezier(.22,1,.3,1)}
+#dw-phone-panel.open{opacity:1;pointer-events:auto;transform:translate(-50%,-50%)}
+#dw-phone-panel iframe{width:392px;height:812px;border:0;background:transparent;display:block;transform-origin:top left}
+#dw-phone-close{position:fixed;top:20px;right:20px;z-index:121;width:40px;height:40px;border-radius:50%;border:1px solid rgba(255,255,255,.25);background:rgba(20,20,28,.85);color:#fff;font-size:15px;cursor:pointer;display:none;align-items:center;justify-content:center}
+#dw-phone-close:hover{background:rgba(255,255,255,.15)}
+body.dw-phone-open #dw-phone-close{display:flex}
+body.dw-phone-open .hero,body.dw-phone-open footer,body.dw-phone-open .nav-desktop,body.dw-phone-open .btn-signin,body.dw-phone-open .btn-menu,body.dw-phone-open .mobile-menu{display:none!important}
+#dw-zoom{position:fixed;right:14px;top:50%;transform:translateY(-50%);z-index:121;width:44px;height:196px;display:none;flex-direction:column;align-items:center;justify-content:center;gap:2px;border-radius:22px;border:1px solid rgba(255,255,255,.15);background:rgba(20,20,28,.72);backdrop-filter:blur(14px);color:#fff;font-size:15px;font-weight:700;user-select:none}
+body.dw-phone-open #dw-zoom{display:flex}
+#dw-zoom input{width:132px;transform:rotate(-90deg);accent-color:#0a84ff;cursor:pointer;margin:26px 0}
+#dw-zoom span{line-height:1;opacity:.9}
+</style>
+<div id="dw-phone-panel" aria-hidden="true"><iframe id="dw-phone-frame" title="Player device" data-src="phone.html" sandbox="allow-scripts allow-same-origin"></iframe></div>
+<button id="dw-phone-close" title="Exit">X</button>
+<div id="dw-zoom" title="Zoom device"><span>+</span><input id="dw-zoom-range" type="range" min="0" max="100" value="0"><span>&minus;</span></div>
+<script>
+(function(){
+var panel=document.getElementById('dw-phone-panel');
+var frame=document.getElementById('dw-phone-frame');
+var closer=document.getElementById('dw-phone-close');
+var zoomRange=document.getElementById('dw-zoom-range');
+var playBtn=document.getElementById('playBtn');
+if(playBtn){var clean=playBtn.cloneNode(true);playBtn.parentNode.replaceChild(clean,playBtn);playBtn=clean;}
+function zoomMult(){return 1+((zoomRange?+zoomRange.value:0)/100)*0.5;}
+function fit(){
+  var s=Math.min(1,(window.innerHeight*0.92)/812,(window.innerWidth-24)/392)*zoomMult();
+  s=Math.min(s,(window.innerHeight*0.96)/812,(window.innerWidth-16)/392);
+  frame.style.transform='scale('+s+')';
+  panel.style.width=(392*s)+'px';
+  panel.style.height=(812*s)+'px';
+}
+function open(){
+  if(!frame.getAttribute('src')){frame.setAttribute('src',frame.getAttribute('data-src'));}
+  fit();panel.classList.add('open');panel.setAttribute('aria-hidden','false');
+  document.body.classList.add('dw-phone-open');
+}
+function close(){panel.classList.remove('open');panel.setAttribute('aria-hidden','true');document.body.classList.remove('dw-phone-open');}
+window.togglePlayerPhone=function(force){
+  var want=typeof force==='boolean'?force:!panel.classList.contains('open');
+  if(want){open();}else{close();}
+  return want;
+};
+if(playBtn){playBtn.addEventListener('click',function(e){e.preventDefault();open();});}
+closer.addEventListener('click',function(){close();});
+if(zoomRange){zoomRange.addEventListener('input',function(){fit();});}
+window.addEventListener('resize',function(){if(panel.classList.contains('open')){fit();}});
+})();
+</script>
 </body>
 </html>
