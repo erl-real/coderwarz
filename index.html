@@ -101,7 +101,7 @@ footer{padding:20px 40px;text-align:center;font-size:14px;color:#fff;mix-blend-m
     <a href="#" class="logo"></a>
     <nav class="nav-desktop">
       <a href="#" class="active" data-tab="coderwarz">CODERWARZ</a>
-      <a href="https://erl-real.github.io/daornight/" data-tab="dayornight">DAYORNIGHT</a>
+      <a href="#" data-tab="dayornight">DAYORNIGHT</a>
     </nav>
     <button class="btn-signin" id="infoBtn">
       <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
@@ -124,7 +124,7 @@ footer{padding:20px 40px;text-align:center;font-size:14px;color:#fff;mix-blend-m
       </div>
       <nav class="mobile-nav">
         <a href="#" class="active" data-tab="coderwarz">CODERWARZ</a>
-        <a href="https://erl-real.github.io/daornight/" data-tab="dayornight">DAYORNIGHT</a>
+        <a href="#" data-tab="dayornight">DAYORNIGHT</a>
         <div class="mobile-divider">
           <a href="#" class="mobile-signin" id="infoBtnMobile">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
@@ -326,8 +326,9 @@ checkBuilds();
 
 document.querySelectorAll("[data-tab]").forEach(el=>{
   el.addEventListener("click",e=>{
-    // Allow external links to work normally
-    if(el.href && (el.href.startsWith("http://") || el.href.startsWith("https://"))){
+    // All game tabs switch internally. Only allow true external links (raw href starting with http).
+    var raw=el.getAttribute("href")||"";
+    if(raw.startsWith("http://") || raw.startsWith("https://")){
       return;
     }
     e.preventDefault();
@@ -411,7 +412,12 @@ document.getElementById("warningModal").addEventListener("click",e=>{if(e.target
   const el=document.getElementById(id);
   if(el){
     el.addEventListener("click",e=>{
-      if(el.href && el.href!=="#"){
+      // Phone panel handles CODERWARZ play — skip warning for that case only.
+      // DAYORNIGHT play (https://erl-real.github.io/daornight/) always goes through warning.
+      if(id==="playBtn" && typeof current!=="undefined" && current==="coderwarz"){
+        return;
+      }
+      if(el.href && el.href!=="#" && !el.href.endsWith("#")){
         e.preventDefault();
         showWarning(el.href);
       }
@@ -425,8 +431,14 @@ overlay.addEventListener("click",closeMenu);
 </script>
 
 <style>
-#dw-phone-panel{position:fixed;z-index:120;left:50%;top:50%;pointer-events:none;opacity:0;transform:translate(-50%,calc(-50% + 60px));transition:opacity .3s ease,transform .45s cubic-bezier(.22,1,.3,1)}
+#dw-phone-panel{position:fixed;z-index:120;left:50%;top:50%;pointer-events:none;opacity:0;transform:translate(-50%,calc(-50% + 60px));transition:opacity .3s ease,transform .45s cubic-bezier(.22,1,.3,1),left .45s ease,top .45s ease}
 #dw-phone-panel.open{opacity:1;pointer-events:auto;transform:translate(-50%,-50%)}
+#dw-phone-panel.placed{transform:none}
+#dw-phone-panel.placed.open{transform:none}
+#dw-phone-panel.dragging{transition:none}
+#dw-grab{position:fixed;z-index:122;width:38px;height:38px;border-radius:50%;border:1px solid rgba(255,255,255,.2);background:rgba(20,20,28,.85);backdrop-filter:blur(10px);color:#fff;font-size:17px;cursor:grab;display:none;align-items:center;justify-content:center;touch-action:none;user-select:none}
+#dw-grab:active{cursor:grabbing}
+body.dw-phone-open #dw-grab{display:flex}
 #dw-phone-panel iframe{width:392px;height:812px;border:0;background:transparent;display:block;transform-origin:top left}
 #dw-phone-close{position:fixed;top:20px;right:20px;z-index:121;width:40px;height:40px;border-radius:50%;border:1px solid rgba(255,255,255,.25);background:rgba(20,20,28,.85);color:#fff;font-size:15px;cursor:pointer;display:none;align-items:center;justify-content:center}
 #dw-phone-close:hover{background:rgba(255,255,255,.15)}
@@ -436,29 +448,62 @@ body.dw-phone-open .hero,body.dw-phone-open footer,body.dw-phone-open .nav-deskt
 body.dw-phone-open #dw-zoom{display:flex}
 #dw-zoom input{width:132px;transform:rotate(-90deg);accent-color:#0a84ff;cursor:pointer;margin:26px 0}
 #dw-zoom span{line-height:1;opacity:.9}
+#dw-float{position:fixed;right:14px;bottom:14px;z-index:121;min-width:44px;height:44px;border-radius:22px;border:1px solid rgba(255,255,255,.15);background:rgba(20,20,28,.72);backdrop-filter:blur(14px);color:#fff;font-size:17px;cursor:pointer;display:none;align-items:center;justify-content:center;padding:0 12px}
+#dw-float:hover{background:rgba(255,255,255,.15)}
+body.dw-phone-open #dw-float{display:flex}
 </style>
-<div id="dw-phone-panel" aria-hidden="true"><iframe id="dw-phone-frame" title="Player device" data-src="phone.html" sandbox="allow-scripts allow-same-origin"></iframe></div>
+<div id="dw-phone-panel" aria-hidden="true"><iframe id="dw-phone-frame" title="Player device" data-src="phone.html?v=12" sandbox="allow-scripts allow-same-origin"></iframe></div>
+<div id="dw-grab" title="Drag phone">&#10022;</div>
 <button id="dw-phone-close" title="Exit">X</button>
 <div id="dw-zoom" title="Zoom device"><span>+</span><input id="dw-zoom-range" type="range" min="0" max="100" value="0"><span>&minus;</span></div>
+<button id="dw-float" title="Stop floating">&#9208;</button>
 <script>
 (function(){
 var panel=document.getElementById('dw-phone-panel');
 var frame=document.getElementById('dw-phone-frame');
 var closer=document.getElementById('dw-phone-close');
+var grab=document.getElementById('dw-grab');
+function clampPos(x,y){
+  var w=panel.offsetWidth||392,h=panel.offsetHeight||812,m=8;
+  return{x:Math.min(Math.max(x,m),Math.max(m,window.innerWidth-w-m)),y:Math.min(y,Math.max(m,window.innerHeight-h-m))};
+}
+if(grab){
+  grab.addEventListener('pointerdown',function(e){
+    e.preventDefault();
+    var r=panel.getBoundingClientRect();
+    panel.style.left=r.left+'px';panel.style.top=r.top+'px';
+    panel.classList.add('placed','dragging');
+    var sx=e.clientX-r.left,sy=e.clientY-r.top;
+    if(grab.setPointerCapture&&e.pointerId!==undefined){try{grab.setPointerCapture(e.pointerId);}catch(err){}}
+    function mv(ev){var p=clampPos(ev.clientX-sx,ev.clientY-sy);panel.style.left=p.x+'px';panel.style.top=p.y+'px';placeGrip();}
+    function up(){window.removeEventListener('pointermove',mv);window.removeEventListener('pointerup',up);panel.classList.remove('dragging');}
+    window.addEventListener('pointermove',mv);
+    window.addEventListener('pointerup',up);
+  });
+}
 var zoomRange=document.getElementById('dw-zoom-range');
 var playBtn=document.getElementById('playBtn');
-if(playBtn){var clean=playBtn.cloneNode(true);playBtn.parentNode.replaceChild(clean,playBtn);playBtn=clean;}
 function zoomMult(){return 1+((zoomRange?+zoomRange.value:0)/100)*0.5;}
 function fit(){
   var s=Math.min(1,(window.innerHeight*0.92)/812,(window.innerWidth-24)/392)*zoomMult();
-  s=Math.min(s,(window.innerHeight*0.96)/812,(window.innerWidth-16)/392);
   frame.style.transform='scale('+s+')';
   panel.style.width=(392*s)+'px';
   panel.style.height=(812*s)+'px';
+  placeGrip();
+}
+/* grip floats viewport-fixed near the phone edge and slides up its side when zoomed */
+function placeGrip(){
+  if(!grab)return;
+  var r=panel.getBoundingClientRect(),m=10,s=38;
+  var x=Math.min(Math.max(r.right-14,m),Math.max(m,window.innerWidth-m-s));
+  var y=Math.min(Math.max(r.bottom-14,m),Math.max(m,window.innerHeight-m-s));
+  grab.style.left=x+'px';grab.style.top=y+'px';
 }
 function open(){
   if(!frame.getAttribute('src')){frame.setAttribute('src',frame.getAttribute('data-src'));}
-  fit();panel.classList.add('open');panel.setAttribute('aria-hidden','false');
+  fit();
+  panel.classList.remove('placed');panel.style.left='';panel.style.top='';
+  panel.classList.add('open');panel.setAttribute('aria-hidden','false');
   document.body.classList.add('dw-phone-open');
 }
 function close(){panel.classList.remove('open');panel.setAttribute('aria-hidden','true');document.body.classList.remove('dw-phone-open');}
@@ -467,10 +512,26 @@ window.togglePlayerPhone=function(force){
   if(want){open();}else{close();}
   return want;
 };
-if(playBtn){playBtn.addEventListener('click',function(e){e.preventDefault();open();});}
+if(playBtn){playBtn.addEventListener('click',function(e){
+  // Phone panel is ONLY for CODERWARZ. DAYORNIGHT uses the real link
+  // https://erl-real.github.io/daornight/ via the warning modal.
+  var isCoderwarz=(typeof current!=="undefined")?current==="coderwarz":true;
+  if(!isCoderwarz){return;}
+  e.preventDefault();e.stopImmediatePropagation();open();
+},true);}
 closer.addEventListener('click',function(){close();});
 if(zoomRange){zoomRange.addEventListener('input',function(){fit();});}
-window.addEventListener('resize',function(){if(panel.classList.contains('open')){fit();}});
+var floatBtn=document.getElementById('dw-float');
+var floatOn=true; try{floatOn=localStorage.getItem('dwFloat')!=='off';}catch(e){}
+function updateFloatBtn(){if(floatBtn){floatBtn.innerHTML=floatOn?'&#9208;':'&#9654;';floatBtn.title=floatOn?'Stop floating':'Float';}}
+function sendFloat(){try{frame.contentWindow.postMessage({type:'phone-float',on:floatOn},'*');}catch(e){}updateFloatBtn();}
+frame.addEventListener('load',function(){sendFloat();});
+if(floatBtn){floatBtn.addEventListener('click',function(){floatOn=!floatOn;try{localStorage.setItem('dwFloat',floatOn?'on':'off');}catch(e){}sendFloat();});}
+updateFloatBtn();
+window.addEventListener('resize',function(){
+  if(!panel.classList.contains('open')){return;}
+  fit();
+});
 })();
 </script>
 </body>
