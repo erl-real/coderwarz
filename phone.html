@@ -116,6 +116,37 @@ body.haunted .phone{
     0 0 0 1px #000,
     0 0 90px -10px rgba(124,255,79,.35);
 }
+/* ══ HIGH-TECH PHONE SKIN — titanium frame + banded glass (crossfade) ══ */
+.phone-frame-hi{
+  position:absolute;inset:0;border-radius:58px;pointer-events:none;
+  background:
+    linear-gradient(to bottom,rgba(255,255,255,.28),rgba(255,255,255,0) 4%),
+    linear-gradient(160deg,#0b0c0e,#3a3f47 28%,#101216 52%,#6e7480 76%,#050607);
+  box-shadow:
+    0 2px 0 rgba(255,255,255,.35) inset,
+    0 50px 90px -30px rgba(0,0,0,.9),
+    0 0 0 1px #000,
+    0 0 44px -6px rgba(140,170,255,.35);
+  opacity:0;transition:opacity .8s ease;
+}
+.phone-frame-hi::before{ /* antenna breaks */
+  content:"";position:absolute;top:5px;left:0;width:100%;height:6px;
+  background:
+    linear-gradient(#9aa0ab,#9aa0ab) 15% 0/3px 6px no-repeat,
+    linear-gradient(#9aa0ab,#9aa0ab) 85% 0/3px 6px no-repeat;
+  opacity:.8;
+}
+.phone-frame-hi::after{ /* side buttons */
+  content:"";position:absolute;right:-3px;top:200px;width:3px;height:190px;
+  background:linear-gradient(to bottom,#3a3f47 0 50px,transparent 50px 92px,#3a3f47 92px 190px);
+  border-radius:0 3px 3px 0;
+}
+.screen-glare-hi{
+  position:absolute;inset:0;border-radius:48px;pointer-events:none;z-index:60;
+  background:linear-gradient(to right,rgba(255,255,255,.20) 1%,transparent 5%,rgba(255,255,255,.10) 50%,transparent 97%,rgba(255,255,255,.20) 99%);
+  mix-blend-mode:screen;opacity:0;transition:opacity .8s ease;
+}
+body.skin-high .phone-frame-hi,body.skin-high .screen-glare-hi{opacity:1}
 .phone.quake{animation:quake .5s ease}
 @keyframes quake{
   0%,100%{transform:translate(0,0) rotate(0)}
@@ -437,8 +468,9 @@ body.impact{animation:impact .34s ease}
 .homebar{
   position:absolute;bottom:9px;left:50%;transform:translateX(-50%);
   width:138px;height:5px;border-radius:3px;background:var(--ink);opacity:.28;z-index:58;
-  transition:background .8s ease;
+  transition:background .8s ease;pointer-events:none;
 }
+.island{pointer-events:none}
 
 /* ── caption under phone ────────────────────────────────── */
 .caption{
@@ -497,6 +529,13 @@ body.impact{animation:impact .34s ease}
 }
 .tab.active{background:var(--bg);color:var(--ink);font-weight:700;box-shadow:0 1px 4px rgba(0,0,0,.18)}
 .tab{position:relative}
+.tabs{position:relative}
+.tab-indicator{position:absolute;bottom:0;left:0;height:2px;width:calc(100% / 6);pointer-events:none}
+.tab-indicator i{display:block;height:100%;border-radius:2px;background:var(--accent);transition:transform .3s cubic-bezier(0.65,0,0.35,1)}
+#content.tab-enter-right{animation:tabInRight .3s cubic-bezier(0.65,0,0.35,1)}
+#content.tab-enter-left{animation:tabInLeft .3s cubic-bezier(0.65,0,0.35,1)}
+@keyframes tabInRight{from{transform:translateX(26px);opacity:0}to{transform:none;opacity:1}}
+@keyframes tabInLeft{from{transform:translateX(-26px);opacity:0}to{transform:none;opacity:1}}
 .hack-tab-bar{position:absolute;left:10px;right:10px;bottom:2px;height:3px;border-radius:2px;background:color-mix(in srgb,var(--ink) 12%,transparent);overflow:hidden;pointer-events:none}
 .hack-tab-bar i{display:block;height:100%;width:100%;border-radius:2px;background:#30d158;transition:width .25s linear}
 .tab.locked{opacity:.35}
@@ -523,17 +562,23 @@ body.impact{animation:impact .34s ease}
 .pf-hero .v{font-family:var(--mono);font-size:26px;font-weight:700;color:var(--ink);margin-top:2px}
 .screen.dark .stats-bar .cash{color:#30d158}
 .screen.dark .stats-bar .bank{color:#ffd60a}
+/* ══ INFECTION PERF — blurs off + shake steadied while glitching ══ */
+.screen.infx1 .nav,.screen.infx2 .nav{backdrop-filter:none}
+.screen.infx1 .toast,.screen.infx2 .toast,
+.screen.infx1 .noticenter,.screen.infx2 .noticenter,
+.screen.infx1 .msgcenter,.screen.infx2 .msgcenter{backdrop-filter:none;background:rgba(26,26,30,.94)}
+.screen.steady #app{animation:none !important}
+.screen.calm #app,.screen.calm .statusbar{animation:none !important}
+.screen.calm .batt i{animation:none !important}
 /* ══ INFECTION GLITCH TIERS (demo language: flicker, jitter, battery blink) ══ */
 .screen.infx1 #app .title,.screen.infx1 .stats-bar,.screen.infx1 .drug-name,.screen.infx1 .file-value,.screen.infx1 .hack-stat .val{
   text-shadow:1px 0 rgba(255,45,85,.28),-1px 0 rgba(0,210,255,.28);
 }
-.screen.infx1 #app{animation:infxJit 7s ease-in-out infinite}
-@keyframes infxJit{0%,93%,100%{transform:none}94%{transform:translate(-1px,0)}96%{transform:translate(1px,0)}98%{transform:none}}
+.screen.infx1 #app{animation:none}
 .screen.infx2 #app .title,.screen.infx2 .stats-bar,.screen.infx2 .drug-name,.screen.infx2 .file-value,.screen.infx2 .hack-stat .val,.screen.infx2 .menu-btn{
   text-shadow:1.5px 0 rgba(255,45,85,.55),-1.5px 0 rgba(0,220,255,.55);
 }
-.screen.infx2 #app{animation:infxJit2 4s ease-in-out infinite}
-@keyframes infxJit2{0%,90%,100%{transform:none}92%{transform:translate(-2px,1px)}94%{transform:translate(2px,-1px)}96%{transform:translate(-1px,0) skewX(-1deg)}98%{transform:none}}
+.screen.infx2 #app{animation:none}
 .screen.infx2 .statusbar{text-shadow:0 0 8px rgba(255,60,60,.5);animation:infxFlick 5s infinite}
 @keyframes infxFlick{0%,94%,100%{opacity:1}95%{opacity:.4}96%{opacity:.9}97%{opacity:.55}98%{opacity:1}}
 .screen.infx2 .batt i{background:#ff3b30;animation:infxBatt 1.1s steps(2) infinite}
@@ -620,14 +665,16 @@ body.impact{animation:impact .34s ease}
 @keyframes marketTicker{from{transform:translateX(0)}to{transform:translateX(-50%)}}
 .ticker-item{display:inline-block;padding:6px 12px;border-right:.5px solid var(--line);font-size:10px;font-family:var(--mono)}
 .ticker-item.up,.up{color:#248a3d}.ticker-item.down,.down{color:#ff3b30}.ticker-item.event,.event-row{color:#ff9f0a}.flat{color:var(--ink2)}
-.market-row{display:grid;grid-template-columns:auto 1fr auto;grid-template-areas:"tick name price" "chg held trade";gap:3px 8px;align-items:center;padding:10px 12px;border:.5px solid var(--line);border-bottom:0;background:color-mix(in srgb,var(--bg) 82%,transparent);margin:0;font-size:12px;cursor:pointer;font-family:var(--sys)}
+.market-row{display:grid;grid-template-columns:auto 1fr auto;grid-template-areas:"tick name price" "candles candles candles" "chg held trade";gap:3px 8px;align-items:center;padding:10px 12px;border:.5px solid var(--line);border-bottom:0;background:color-mix(in srgb,var(--bg) 82%,transparent);margin:0;font-size:12px;cursor:pointer;font-family:var(--sys)}
 .market-row>.ticker{grid-area:tick;font-weight:700;font-family:var(--mono);font-size:12px}
 .market-row>span:nth-child(2){grid-area:name;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--ink2);font-size:11.5px}
 .market-row>span:nth-child(3){grid-area:price;font-family:var(--mono);font-weight:700;font-size:12px;text-align:right;white-space:nowrap}
-.market-row>span:nth-child(4){grid-area:chg;font-family:var(--mono);font-size:11px;white-space:nowrap}
-.market-row>span:nth-child(5){grid-area:held;font-family:var(--mono);font-size:11px;color:var(--ink2);white-space:nowrap}
-.market-row>span:nth-child(6){grid-area:trade;display:flex;gap:5px;align-items:center;justify-content:flex-end;min-width:0}
-.market-row>span:nth-child(6) .drug-input{width:42px;flex:0 0 auto}
+.market-row>.candles{grid-area:candles;min-width:0}
+.market-row>.candles svg{display:block;width:100%;height:34px}
+.market-row>span:nth-child(5){grid-area:chg;font-family:var(--mono);font-size:11px;white-space:nowrap}
+.market-row>span:nth-child(6){grid-area:held;font-family:var(--mono);font-size:11px;color:var(--ink2);white-space:nowrap}
+.market-row>span:nth-child(7){grid-area:trade;display:flex;gap:5px;align-items:center;justify-content:flex-end;min-width:0}
+.market-row>span:nth-child(7) .drug-input{width:42px;flex:0 0 auto}
 .market-row:first-of-type{border-top-left-radius:13px;border-top-right-radius:13px}
 .market-row:last-of-type{border-bottom:.5px solid var(--line);border-bottom-left-radius:13px;border-bottom-right-radius:13px;margin-bottom:6px}
 .market-detail{border:.5px solid var(--line);background:color-mix(in srgb,var(--bg) 82%,transparent);padding:10px;margin-top:8px;border-radius:14px}
@@ -720,6 +767,7 @@ body.impact{animation:impact .34s ease}
 <div class="stage">
   <div class="tilt3d" id="tilt">
   <div class="phone" id="phone">
+    <div class="phone-frame-hi"></div>
     <div class="island"></div>
     <div class="screen" id="screen">
 
@@ -775,6 +823,7 @@ body.impact{animation:impact .34s ease}
 
       <button id="msgBtn" title="Messages">💬<span class="msgbadge" id="msgBadge" style="display:none">0</span></button>
       <div class="homebar"></div>
+      <div class="screen-glare-hi"></div>
     </div>
   </div>
   </div>
@@ -1028,12 +1077,20 @@ function ncRenderSettings(){
   const defs=[["good","Good news","Sales, payments and wins"],["bad","Warnings","Busts, losses and threats"],["neutral","Info","Travel, dates and general log"]];
   const icons={good:"✅",bad:"🚨",neutral:"💬"};
   ncList.innerHTML=`<div class="nc-sethead"><button class="nc-back" id="ncBack">‹ Back</button><span class="nc-settitle">Notification Settings</span></div>`+
-    defs.map(d=>`<label class="nc-setrow"><input type="checkbox" data-ntype="${d[0]}"${window._ncPrefs[d[0]]!==false?" checked":""}><span class="t">${icons[d[0]]} ${d[1]}<span class="d">${d[2]}</span></span></label>`).join("");
+    defs.map(d=>`<label class="nc-setrow"><input type="checkbox" data-ntype="${d[0]}"${window._ncPrefs[d[0]]!==false?" checked":""}><span class="t">${icons[d[0]]} ${d[1]}<span class="d">${d[2]}</span></span></label>`).join("")+
+    `<label class="nc-setrow"><input type="checkbox" data-ntype="calm"${window._ncCalm?" checked":""}><span class="t">🧊 Calm glitch<span class="d">Stops the infection screen shake (infection still spreads)</span></span></label>`;
+}
+window._ncCalm=false;
+try{window._ncCalm=localStorage.getItem("dwCalm")==="1";}catch(e){}
+function dwApplyCalm(){
+  if(screen) screen.classList.toggle("calm",!!window._ncCalm);
+  try{localStorage.setItem("dwCalm",window._ncCalm?"1":"0");}catch(e){}
 }
 if(ncList&&!ncList._wired){
   ncList._wired=true;
   ncList.addEventListener("change",e=>{
     const t=e.target&&e.target.dataset&&e.target.dataset.ntype;
+    if(t==="calm"){window._ncCalm=e.target.checked;dwApplyCalm();return;}
     if(t){window._ncPrefs[t]=e.target.checked;ncSavePrefs();}
   });
   ncList.addEventListener("click",e=>{
@@ -1048,6 +1105,15 @@ if(ncList&&!ncList._wired){
   });
 }
 if(noticenter) noticenter.addEventListener("click",e=>{e.stopPropagation();});
+// Steady the infection shake while the player is touching the screen so
+// taps land on a stable layout (shake resumes ~1.2s after release).
+let steadyT = 0;
+if(screen) screen.addEventListener("pointerdown",()=>{
+  if(!screen.classList.contains("infx1") && !screen.classList.contains("infx2")) return;
+  screen.classList.add("steady");
+  try{clearTimeout(steadyT);}catch(e){}
+  steadyT = setTimeout(()=>screen.classList.remove("steady"),1200);
+});
 screen.addEventListener("click",()=>{ if(noticenter.classList.contains("on")) ncClose(); if(msgcenter&&msgcenter.classList.contains("on")) closeMessages(); });
 /* ── dark / light theme (moon / sun in notification center) ── */
 window._dwDark=false;
@@ -1060,6 +1126,7 @@ function dwApplyTheme(){
 }
 if(ncTheme) ncTheme.addEventListener("click",e=>{e.stopPropagation();window._dwDark=!window._dwDark;dwApplyTheme();});
 dwApplyTheme();
+dwApplyCalm();
 /* game log -> phone notification */
 window.pushGameLog=function(msg,type){
   var t=type||"neutral";
@@ -1239,6 +1306,14 @@ function tick(now) {
   requestAnimationFrame(tick);
 }
 requestAnimationFrame(tick);
+// Failsafe: the preloader grabs every tap (pointer-events:all), so if its
+// animation ever stalls the whole phone goes dead. Force it away.
+setTimeout(() => {
+  if (chamber.style.visibility !== 'hidden') {
+    chamber.style.visibility = 'hidden';
+    window.dispatchEvent(new Event('chamber-done'));
+  }
+}, 15000);
 
 const DRUGS = [
   { name: "Weed",      base: 60,   min: 30,   max: 180  },
@@ -1286,6 +1361,7 @@ function initGame() {
     cash: 420,
     debt: 5500,
     bank: 0,
+    battery: 100,
     city: 0,
     day: 1,
     maxDays: 999,
@@ -1323,6 +1399,8 @@ function initGame() {
     playerCar: null,
     lotStock: {},
     hqCrates: 0,
+    hqContainers: 0,
+    servers: 0,
     hq: "",
     hqInventory: new Array(DRUGS.length).fill(0),
     boughtToday: new Array(DRUGS.length).fill(false),
@@ -1334,6 +1412,11 @@ function initGame() {
     wantedSince: 0,
     sharkWarned: false,
     sharkHit: false,
+    crewMsgSent: false,
+    jobBoard: [],
+    deployments: [],
+    crewStatus: {},
+    jobUid: 1,
     messages: [],
     msgThread: null,
     storyIntroSent: false,
@@ -1356,7 +1439,10 @@ function initGame() {
       dlProgress: 0,
       dlDuration: 0,
       dlCount: 0,
-      warned20: false
+      warned20: false,
+      _tab: "main",
+      scripts: {},
+      fileTypes: [true, false, false, false]
     },
     virus: {
       alive: true,
@@ -1364,6 +1450,7 @@ function initGame() {
       lastFedDay: 1,
       weakened: false,
       totalFed: 0,
+      look: { size: 0.2, deform: 0.06, lobes: 1.05, morph: 1.08, rot: 0.02, bg: "#04120c", blend: "Ink", rimA: "#9cff4d", rimB: "#00e5a0", glowA: "#57ff3c", glowB: "#00ffc8", specular: 2.3, glint: 235, glow: 0.2, flow: 0.4, swirl: 1.75, brightness: 0.85, filaments: 1.7, core: 0.28 },
       stats: {
         speed: { xp: 0 },
         strength: { xp: 0 },
@@ -1437,10 +1524,26 @@ function netWorth() {
   return G.cash + G.bank + invValue - G.debt;
 }
 
+// Top-tab slide animation (demo-style): sliding indicator + content glide.
+// render() consumes tabSlideFrom/tabSlideDir, then clears them so only
+// real tab switches animate — plain re-renders stay put.
+const TAB_ORDER = ["safehouse", "trap", "market", "hack", "crew", "virus"];
+let tabSlideFrom = -1, tabSlideDir = 0;
+
+function goTab(tab) {
+  const from = TAB_ORDER.indexOf(G.tab);
+  const to = TAB_ORDER.indexOf(tab);
+  tabSlideFrom = from >= 0 ? from : to;
+  tabSlideDir = to > from ? 1 : to < from ? -1 : 0;
+  G.tab = tab;
+  render();
+}
+
 function render() {
   const app = document.getElementById("app");
   if (G.over) { renderGameOver(app); return; }
 
+  const tabIdx = TAB_ORDER.indexOf(G.tab);
   const statsHtml = `
     <div class="header">
       <div class="tabs">
@@ -1450,6 +1553,7 @@ function render() {
         <button class="tab ${G.tab === 'hack' ? 'active' : ''}" onclick="switchTab('hack')" ${hasHackDevice() ? '' : 'disabled title="Buy a phone or PC at the TRAP to unlock HACK"'}>HACK${hasHackDevice() ? '' : ' 🔒'}<span class="hack-tab-bar" id="hackTabBar" style="display:none"><i id="hackTabFill"></i></span></button>
         <button class="tab ${G.tab === 'crew' ? 'active' : ''}" onclick="switchTab('crew')" ${G.debt > 0 ? 'title="Pay off your loan to unlock crew." disabled' : ''}>${G.debt > 0 ? 'CREW 🔒' : 'CREW'}</button>
         <button class="tab ${G.tab === 'virus' ? 'active' : ''}" onclick="switchTab('virus')" ${hasPcDevice() ? '' : 'title="Buy a PC at the TRAP to unlock VIRUS" disabled'}>${hasPcDevice() ? 'VIRUS' : 'VIRUS 🔒'}</button>
+        <span class="tab-indicator"><i id="tabIndicator" style="transform:translateX(${Math.max(0, tabIdx) * 100}%)"></i></span>
       </div>
       <div class="stats-bar">
         <div class="srow1">
@@ -1464,33 +1568,42 @@ function render() {
       </div>
     </div>`;
 
-  app.innerHTML = statsHtml + `<div id="content"></div>`;
+  const slideCls = tabSlideDir > 0 ? "tab-enter-right" : tabSlideDir < 0 ? "tab-enter-left" : "";
+  const slideFrom = tabSlideFrom;
+  tabSlideFrom = -1; tabSlideDir = 0;
+  app.innerHTML = statsHtml + `<div id="content"${slideCls ? ` class="${slideCls}"` : ""}></div>`;
   if (G.tab === "safehouse") renderSafehouse();
   if (G.tab === "trap") renderTrap();
   if (G.tab === "hack") renderHack();
   if (G.tab === "market") renderMarket();
   if (G.tab === "crew") renderCrew();
   if (G.tab === "virus") renderVirus();
+  // Slide the fresh indicator from the old tab to the new one.
+  const tabIdxNow = TAB_ORDER.indexOf(G.tab);
+  const ind = document.getElementById("tabIndicator");
+  if (ind && slideFrom >= 0 && slideFrom !== tabIdxNow) {
+    ind.style.transition = "none";
+    ind.style.transform = `translateX(${slideFrom * 100}%)`;
+    void ind.offsetWidth;
+    ind.style.transition = "";
+    ind.style.transform = `translateX(${tabIdxNow * 100}%)`;
+  }
   updateInfectionUI();
   updateHackTabBar();
   if (window.phoneDate) window.phoneDate();
+  updateBatteryUI();
+  applyPhoneSkin();
 }
 
 function switchTab(tab) {
   if (tab === "hack" && !hasHackDevice()) {
     addLog("Buy a phone or PC at the TRAP to unlock HACK.", "bad");
-    G.tab = "trap";
-    render();
-    return;
-  }
-  if (tab === "virus" && !hasPcDevice()) {
+    tab = "trap";
+  } else if (tab === "virus" && !hasPcDevice()) {
     addLog("Buy a PC at the TRAP to unlock VIRUS.", "bad");
-    G.tab = "trap";
-    render();
-    return;
+    tab = "trap";
   }
-  G.tab = tab;
-  render();
+  goTab(tab);
 }
 
 function renderSafehouse() {
@@ -1528,7 +1641,7 @@ function renderSafehouse() {
       ${[["Fitness", G.stats.fitness], ["Strength", G.stats.strength], ["First Aid", G.firstaidXp], ["Aiming", G.stats.aiming], ["Reloading", G.stats.reloading], ["Driving", G.stats.driving], ["Hacking", G.stats.hacking]].map(([label, xp]) => {
         const lv = skillLevel(xp);
         const nx = skillNext(xp);
-        const det = nx === null ? "MAX" : `${xp} / ${nx} XP`;
+        const det = nx === null ? "MAX" : `${trimXp(xp)} / ${nx} XP`;
         return `
         <div class="virus-stat">
           <span class="name">${label}</span><span class="level">Lv.${lv}</span>
@@ -1553,9 +1666,38 @@ function hqCrateCap() {
   return 0;
 }
 
+function hqUnits() { return (G.hqCrates || 0) + (G.hqContainers || 0); }
+
+// Servers: 20k each, +30 file slots, +1 active script, eat 4 HQ slots.
+// Caps: Small 1 · Medium 3 · Large 6. Never sold; they move with you.
+const SERVER_COST = 20000, SERVER_FILE_SLOTS = 30, SERVER_HQ_SLOTS = 4;
+const SERVER_CAPS = { "Small HQ": 1, "Medium HQ": 3, "Large HQ": 6 };
+
+function serverCap() { return SERVER_CAPS[G.hq] || 0; }
+function serverCount() { return G.servers || 0; }
+function fileCap() { return MAX_HACK_FILES + serverCount() * SERVER_FILE_SLOTS; }
+function hqUsedSlots() { return totalHQDrugs() + gunHQCount() + serverCount() * SERVER_HQ_SLOTS; }
+function activeScriptCap() { return 1 + (crewHas("Hacker") ? 1 : 0) + serverCount(); }
+function activeScriptCount() { return Object.values(hackScripts()).filter(s => s.owned && s.on).length; }
+
+function buyServer() {
+  if (!G.hq) { addLog("You need an HQ first.", "bad"); return; }
+  if (serverCount() >= serverCap()) { addLog(`${G.hq} only fits ${serverCap()} server${serverCap() === 1 ? "" : "s"}.`, "bad"); renderCrewHQ(); return; }
+  if (G.cash < SERVER_COST) { addLog("Not enough cash! ($20,000)", "bad"); renderCrewHQ(); return; }
+  if (hqCapacity() - hqUsedSlots() < SERVER_HQ_SLOTS) { addLog("Not enough free HQ space (needs 4 slots).", "bad"); renderCrewHQ(); return; }
+  G.cash -= SERVER_COST;
+  G.servers = serverCount() + 1;
+  addLog(`Server rack installed (+${SERVER_FILE_SLOTS} file slots, +1 script).`, "good");
+  refreshStats();
+  renderCrewHQ();
+}
+
 function hqCapacity() {
   const base = G.hq === "Small HQ" ? 100 : G.hq === "Medium HQ" ? 220 : G.hq === "Large HQ" ? 500 : G.maxCapacity;
-  return base + Math.min(G.hqCrates || 0, hqCrateCap()) * 10;
+  const cap = hqCrateCap();
+  const crates = Math.min(G.hqCrates || 0, cap);
+  const conts = Math.min(G.hqContainers || 0, Math.max(0, cap - crates));
+  return base + crates * 10 + conts * 40;
 }
 
 function bagCapacity() {
@@ -1688,7 +1830,7 @@ function renderTrap() {
       }).join("")
     : '<div style="color:#888;font-size:11px;padding:6px">Trunk is empty today.</div>';
 
-  const crateText = G.hq ? ` Crates: ${G.hqCrates || 0}/${hqCrateCap()} (+${Math.min(G.hqCrates || 0, hqCrateCap()) * 10} slots).` : "";
+  const crateText = G.hq ? ` Crates: ${G.hqCrates || 0} (+10ea) · Containers: ${G.hqContainers || 0} (+40ea) · Slots: ${hqUnits()}/${hqCrateCap()}.` : "";
   const lot = G.hq && G.crew.length > 0 ? `<div class="title" style="margin-top:8px">LOT</div>${renderLotRows()}` : "";
 
   c.innerHTML = `
@@ -1714,12 +1856,13 @@ function buyGear(idx) {
   if (G.cash < cost) { addLog("Not enough cash!", "bad"); renderTrap(); return; }
 
   if (g.crate) {
-    if ((G.hqCrates || 0) >= hqCrateCap()) { addLog("Your HQ has reached its crate limit.", "bad"); renderTrap(); return; }
+    if (hqUnits() >= hqCrateCap()) { addLog("Your HQ has reached its crate limit.", "bad"); renderTrap(); return; }
     G.cash -= cost;
     takeTrunkStock(g.name, 1);
-    G.hqCrates = (G.hqCrates || 0) + 1;
+    if (g.container) G.hqContainers = (G.hqContainers || 0) + 1;
+    else G.hqCrates = (G.hqCrates || 0) + 1;
     G.maxCapacity = hqCapacity();
-    addLog(`Bought an HQ crate for $${cost.toLocaleString()}. Capacity is now ${G.maxCapacity}.`, "good");
+    addLog(`Bought ${g.name} for $${cost.toLocaleString()}. Capacity is now ${G.maxCapacity}.`, "good");
     refreshStats(); renderTrap(); return;
   }
 
@@ -1744,6 +1887,7 @@ function buyGear(idx) {
       G.spareDevices.push(entry);
       addLog(`Bought ${g.name} for $${cost.toLocaleString()}. Stashed as a spare — sell it or give it to crew.`, "good");
     }
+    if (g.device === "phone") { G.battery = batteryMax(); addLog("Fresh cell: battery full.", "neutral"); }
     refreshStats(); renderTrap(); return;
   }
 
@@ -1913,6 +2057,7 @@ function equipSpareDevice(i) {
     addLog(`Equipped ${d.name} (+${d.queueBonus} scan queue).`, "good");
   }
   G.devices.push(d);
+  if (d.type === "phone") G.battery = batteryMax();
   refreshStats();
   renderSafehouse();
 }
@@ -2039,7 +2184,7 @@ function storeGunInHQ(gunIdx) {
   const gun = G.guns[gunIdx];
   if (!gun) return;
   if (!G.hq) { addLog("You need an HQ to store an unused gun.", "bad"); renderGunAssignment(gunIdx); return; }
-  if (totalHQDrugs() + gunHQCount() >= hqCapacity()) { addLog("HQ is full!", "bad"); renderGunAssignment(gunIdx); return; }
+  if (hqUsedSlots() >= hqCapacity()) { addLog("HQ is full!", "bad"); renderGunAssignment(gunIdx); return; }
   gun.assignedTo = null;
   syncGunGear();
   addLog(`${gun.name} stored in HQ.`, "neutral");
@@ -2127,12 +2272,299 @@ function renderCrewRivals() {
     <button class="menu-btn back-btn" onclick="renderCrew()">BACK</button>`;
 }
 
+// ===== DISPATCH MISSIONS (crew deployments, MGS-style) =====
+// Grades gate on HQ size: Small→D,C · Medium→C,B,A · Large→B,A,S.
+// Rewards match each mission's name/vibe. A/S-tier failures can kill.
+const JOB_DIFF = { D: 20, C: 35, B: 55, A: 80, S: 115 };
+const JOB_DEATH = { D: 0, C: 0, B: 0, A: 0.05, S: 0.12 };
+const JOB_DEFS = [
+  { key: "corner-lookout", name: "Corner Lookout", grade: "D", days: 1, minSquad: 1, vibe: "Post a kid on the corner to wave off patrols.", reward: { cash: [300, 700] } },
+  { key: "prescription-run", name: "Prescription Run", grade: "D", days: 1, minSquad: 1, vibe: "Sweet-talk a pharmacy tech out the back door.", reward: { drugs: [[2, 2, 4], [3, 2, 4]] } },
+  { key: "wheatpaste", name: "Wheatpaste Tribute", grade: "D", days: 1, minSquad: 1, vibe: "Tag the set's name across rival walls.", reward: { cash: [250, 600] } },
+  { key: "warehouse-sip", name: "Warehouse Sip", grade: "C", days: 2, minSquad: 1, vibe: "Siphon product off a warehouse pallet.", reward: { drugs: [[0, 4, 8]] } },
+  { key: "chop-shop", name: "Chop Shop Shift", grade: "C", days: 2, minSquad: 1, vibe: "Strip a boosted ride overnight.", req: { crew: ["Wheelman"] }, reward: { cash: [900, 1600] } },
+  { key: "pharmacy-audit", name: "Pharmacy Audit", grade: "C", days: 2, minSquad: 1, vibe: "Keep watch while the shelves get lightened.", req: { crew: ["Lookout"] }, reward: { drugs: [[6, 3, 6]] } },
+  { key: "truck-intercept", name: "Truck Intercept", grade: "B", days: 3, minSquad: 2, vibe: "Box in a delivery truck and take the load.", req: { car: true }, reward: { cash: [2200, 3600], guns: [["Glock", 10, 0.4]] } },
+  { key: "lab-cook", name: "Lab Cook", grade: "B", days: 3, minSquad: 2, vibe: "Guard the cook while a batch finishes.", req: { crew: ["Goon"] }, reward: { drugs: [[4, 3, 6]] } },
+  { key: "ammo-depot", name: "Ammo Depot Raid", grade: "B", days: 3, minSquad: 2, vibe: "Hit a depot guardhouse for hardware.", req: { gunDmg: 10 }, reward: { guns: [["Tech9", 15, 0.6], ["AR Pistol", 21, 0.35]] } },
+  { key: "courier-ambush", name: "Bank Courier Ambush", grade: "A", days: 4, minSquad: 2, vibe: "Take a bank courier's bag on its route.", req: { crew: ["Goon"], car: true }, reward: { cash: [5500, 9500] } },
+  { key: "evidence-locker", name: "DEA Evidence Locker", grade: "A", days: 4, minSquad: 2, vibe: "Walk seized weight and a terminal out of lockup.", req: { crew: ["Hacker"], gunDmg: 15 }, reward: { drugs: [[5, 4, 8]], tech: [{ name: "Mid-Tech PC", type: "pc", tech: "medium", queueBonus: 6, cost: 1500 }] } },
+  { key: "cartel-siege", name: "Cartel Summit Siege", grade: "S", days: 5, minSquad: 3, vibe: "Storm a cartel summit and take everything.", req: { crew: ["Goon", "Hacker"], car: true, gunDmg: 20 }, reward: { cash: [9000, 15000], guns: [["M16", 40, 0.7]] } },
+  { key: "fed-rumor", name: "Federal Reserve Rumor", grade: "S", days: 6, minSquad: 3, vibe: "Follow a rumor about a federal cash move.", req: { crew: ["Hacker", "Goon"], car: true }, reward: { cash: [15000, 25000] } },
+];
+
+const JOB_TIERS = { "Small HQ": ["D", "C"], "Medium HQ": ["C", "B", "A"], "Large HQ": ["B", "A", "S"] };
+
+function jobDef(key) { return JOB_DEFS.find(d => d.key === key); }
+
+function crewHasCar() {
+  if (G.playerCar) return true;
+  return Object.keys(G.crewGear || {}).some(n => G.crewGear[n] && G.crewGear[n].car);
+}
+
+function crewBestGunDmg() {
+  let best = 0;
+  (G.guns || []).forEach(g => { if (g.assignedTo !== "seized") best = Math.max(best, g.damage || 0); });
+  return best;
+}
+
+// Spawn gate: HQ tier + requirements + bodies. Unmet reqs never spawn.
+function jobReqsMet(d) {
+  const r = d.req || {};
+  const missing = [];
+  (r.crew || []).forEach(n => { if (!G.crew.includes(n)) missing.push(n); });
+  if (r.car && !crewHasCar()) missing.push("a car");
+  if (r.gunDmg && crewBestGunDmg() < r.gunDmg) missing.push(`a ${r.gunDmg}+ dmg gun`);
+  return { ok: missing.length === 0, missing };
+}
+
+function jobReqText(d) {
+  const r = d.req || {};
+  const parts = [];
+  (r.crew || []).forEach(n => parts.push(n));
+  if (r.car) parts.push("a car");
+  if (r.gunDmg) parts.push(`${r.gunDmg}+ dmg gun`);
+  parts.push(`${d.minSquad || 1}+ crew`);
+  return parts.join(" · ");
+}
+
+function jobRewardText(d) {
+  const r = d.reward || {};
+  const parts = [];
+  if (r.cash) parts.push(`$${r.cash[0].toLocaleString()}–$${r.cash[1].toLocaleString()}`);
+  (r.drugs || []).forEach(x => parts.push(`${x[1]}–${x[2]} ${DRUGS[x[0]].name}`));
+  (r.guns || []).forEach(g => parts.push(`${g[0]}${g[2] < 1 ? "?" : ""}`));
+  (r.tech || []).forEach(t => parts.push(t.name));
+  return parts.join(" + ") || "???";
+}
+
+function rollJobBoard() {
+  if (!G.jobUid) G.jobUid = 1;
+  if (!Array.isArray(G.jobBoard)) G.jobBoard = [];
+  if (!Array.isArray(G.deployments)) G.deployments = [];
+  const tiers = JOB_TIERS[G.hq] || [];
+  const size = !G.hq ? 0 : G.hq === "Small HQ" ? 3 : G.hq === "Medium HQ" ? 4 : 5;
+  const elig = JOB_DEFS.filter(d => tiers.includes(d.grade) && jobReqsMet(d).ok && G.crew.length >= (d.minSquad || 1));
+  for (let i = elig.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); const t = elig[i]; elig[i] = elig[j]; elig[j] = t; }
+  G.jobBoard = elig.slice(0, size).map(d => ({ uid: G.jobUid++, key: d.key }));
+}
+
+function crewPower(name) {
+  const q = getCrewGear(name);
+  let p = 10;
+  if (q.gun) p += (q.gun.damage || 0) * 2;
+  if (q.car) p += 8;
+  if (q.armor) p += 5;
+  return p;
+}
+
+function missionSuccessPct(power, grade) {
+  return Math.max(5, Math.min(95, Math.round(50 + (power - JOB_DIFF[grade]) * 1.2)));
+}
+
+function isCrewBusy(name) {
+  return (G.deployments || []).some(d => d.squad.includes(name));
+}
+
+function isCrewInjured(name) {
+  return !!(G.crewStatus && G.crewStatus[name] && G.crewStatus[name].inj > 0);
+}
+
+function idleCrew() {
+  return G.crew.filter(n => !isCrewBusy(n) && !isCrewInjured(n));
+}
+
+let DEPLOY_SEL = [];
+
 function renderCrewJobs() {
   const c = document.getElementById("content");
+  if (!G.hq) {
+    c.innerHTML = `
+      <div class="title">JOBS</div>
+      <div class="info-box">Deployments need a base. Buy an HQ first, then post jobs here.</div>
+      <button class="menu-btn back-btn" onclick="renderCrew()">BACK</button>`;
+    return;
+  }
+  const active = (G.deployments || []).map(d => {
+    const done = d.totalDays - d.daysLeft;
+    const pct = Math.min(100, Math.round((done / Math.max(1, d.totalDays)) * 100));
+    return `<div class="file-row"><span class="file-type text" style="min-width:50px;font-weight:bold">${d.grade}</span><span style="flex:1;color:#aaa;font-size:10px"><strong style="color:#fff">${d.name}</strong> — ${d.squad.join(", ")} · day ${Math.min(done + 1, d.totalDays)}/${d.totalDays}</span><span style="flex:0 0 90px"><span class="scan-bar"><span class="scan-bar-fill" style="width:${pct}%"></span></span></span></div>`;
+  }).join("");
+  const board = (G.jobBoard || []).map(j => {
+    const d = jobDef(j.key);
+    if (!d) return "";
+    const req = jobReqsMet(d);
+    const idle = idleCrew().length;
+    const canGo = req.ok && idle > 0;
+    return `<div class="file-row"><span class="file-type text" style="min-width:36px;font-weight:bold">${d.grade}</span>
+      <span style="flex:1;color:#aaa;font-size:10px"><strong style="color:#fff">${d.name}</strong> — ${d.vibe}<br>
+      <span style="color:#ffcc00">${jobRewardText(d)}</span> · ${d.days}d · needs ${jobReqText(d)}${!req.ok ? ` <span style="color:#ff4444">— missing ${req.missing.join(", ")}</span>` : ""}${req.ok && idle === 0 ? ` <span style="color:#ff4444">— crew busy</span>` : ""}</span>
+      <button class="menu-btn" style="width:auto;padding:2px 8px;margin:0;font-size:10px;${canGo ? "" : "opacity:0.3"}" ${canGo ? "" : "disabled"} onclick="renderDeployPicker(${j.uid})">DEPLOY</button></div>`;
+  }).join("");
   c.innerHTML = `
-    <div class="title">JOBS</div>
-    <div class="info-box">No jobs available.</div>
+    <div class="title">JOBS — DEPLOYMENTS</div>
+    ${active || '<div style="color:#888;font-size:11px;padding:6px">No squads out. Post a job below.</div>'}
+    <div class="title" style="margin-top:8px">JOB BOARD (new jobs daily)</div>
+    ${board || '<div style="color:#888;font-size:11px;padding:6px">No jobs posted. Grow the crew or HQ for bigger work.</div>'}
     <button class="menu-btn back-btn" onclick="renderCrew()">BACK</button>`;
+}
+
+function renderDeployPicker(uid) {
+  const c = document.getElementById("content");
+  const j = (G.jobBoard || []).find(x => x.uid === uid);
+  if (!j) { renderCrewJobs(); return; }
+  const d = jobDef(j.key);
+  const req = jobReqsMet(d);
+  if (!req.ok) { addLog(`Missing: ${req.missing.join(", ")}.`, "bad"); renderCrewJobs(); return; }
+  DEPLOY_SEL = DEPLOY_SEL.filter(n => idleCrew().includes(n));
+  const rows = G.crew.map(n => {
+    const busy = isCrewBusy(n), inj = isCrewInjured(n);
+    const sel = DEPLOY_SEL.includes(n);
+    const tag = busy ? "DEPLOYED" : (inj ? `INJURED ${G.crewStatus[n].inj}d` : `${crewPower(n)} PWR`);
+    return `<div class="file-row"><span class="file-type text" style="min-width:50px;font-weight:bold">${n}</span>
+      <span style="flex:1;color:#aaa;font-size:10px">${tag}</span>
+      <button class="menu-btn" style="width:auto;padding:2px 8px;margin:0;font-size:10px;${(busy || inj) ? "opacity:0.3" : ""}" ${(busy || inj) ? "disabled" : ""} onclick="toggleDeploySel(${uid},'${n.replace(/'/g, "\'")}')">${sel ? "REMOVE" : "ADD"}</button></div>`;
+  }).join("");
+  const power = DEPLOY_SEL.reduce((s, n) => s + crewPower(n), 0);
+  const pct = missionSuccessPct(power, d.grade);
+  const deaths = JOB_DEATH[d.grade] > 0 ? ` · <span style="color:#ff4444">death risk ${Math.round(JOB_DEATH[d.grade] * 100)}%</span>` : "";
+  c.innerHTML = `
+    <div class="title">DEPLOY — ${d.name}</div>
+    <div class="info-box">${d.vibe}<br><span style="color:#ffcc00">${jobRewardText(d)}</span> · ${d.days} day${d.days > 1 ? "s" : ""} · needs ${jobReqText(d)}${deaths}</div>
+    ${rows}
+    <div class="info-box">Squad power ${power} vs difficulty ${JOB_DIFF[d.grade]} — success <strong>${pct}%</strong></div>
+    <button class="menu-btn" onclick="confirmDeploy(${uid})" ${DEPLOY_SEL.length >= (d.minSquad || 1) ? "" : "disabled style=\"opacity:0.35\""}>SEND SQUAD${DEPLOY_SEL.length >= (d.minSquad || 1) ? "" : ` (need ${d.minSquad})`}</button>
+    <button class="menu-btn back-btn" onclick="renderCrewJobs()">BACK</button>`;
+}
+
+function toggleDeploySel(uid, name) {
+  if (!idleCrew().includes(name)) return;
+  if (DEPLOY_SEL.includes(name)) DEPLOY_SEL = DEPLOY_SEL.filter(n => n !== name);
+  else DEPLOY_SEL.push(name);
+  renderDeployPicker(uid);
+}
+
+function confirmDeploy(uid) {
+  const j = (G.jobBoard || []).find(x => x.uid === uid);
+  if (!j) return;
+  const d = jobDef(j.key);
+  const squad = DEPLOY_SEL.filter(n => idleCrew().includes(n));
+  if (squad.length < (d.minSquad || 1)) { addLog(`Need ${d.minSquad} crew for this job.`, "bad"); renderDeployPicker(uid); return; }
+  const power = squad.reduce((s, n) => s + crewPower(n), 0);
+  G.deployments.push({ uid: G.jobUid++, key: d.key, name: d.name, grade: d.grade, daysLeft: d.days, totalDays: d.days, squad, power, diff: JOB_DIFF[d.grade] });
+  G.jobBoard = G.jobBoard.filter(x => x.uid !== uid);
+  DEPLOY_SEL = [];
+  addLog(`Squad out: ${d.name} (${squad.join(", ")}). Back in ${d.days}d.`, "neutral");
+  refreshStats();
+  renderCrewJobs();
+}
+
+// Advance deployments + injuries. Called per elapsed day (sleep + travel).
+function tickDeployments(days) {
+  for (let i = 0; i < days; i++) {
+    if (G.crewStatus) Object.keys(G.crewStatus).forEach(n => {
+      if (G.crewStatus[n].inj > 0) {
+        G.crewStatus[n].inj--;
+        if (G.crewStatus[n].inj <= 0) { delete G.crewStatus[n]; addLog(`${n} is back on their feet.`, "good"); }
+      }
+    });
+    (G.deployments || []).forEach(d => { d.daysLeft--; });
+    const done = (G.deployments || []).filter(d => d.daysLeft <= 0);
+    G.deployments = (G.deployments || []).filter(d => d.daysLeft > 0);
+    done.forEach(resolveDeployment);
+  }
+}
+
+function grantDeployDrugs(idx, qty) {
+  let space = G.maxCapacity - totalDrugs() - pocketGunCount();
+  const toPock = Math.max(0, Math.min(qty, space));
+  G.inventory[idx] += toPock;
+  let left = qty - toPock;
+  if (left > 0 && G.hq) {
+    const hs = hqCapacity() - hqUsedSlots();
+    const toHQ = Math.max(0, Math.min(left, hs));
+    G.hqInventory[idx] += toHQ;
+    left -= toHQ;
+  }
+  return left;
+}
+
+function grantDeployGun(name, damage) {
+  const gun = { name, desc: `+${damage} damage`, damage, status: "stolen", assignedTo: "pocket" };
+  if (totalDrugs() + pocketGunCount() >= G.maxCapacity) {
+    if (G.hq && hqUsedSlots() < hqCapacity()) gun.assignedTo = null;
+    else return false;
+  }
+  G.guns.push(gun);
+  syncGunGear();
+  return true;
+}
+
+function crewMemberDies(name) {
+  const q = getCrewGear(name);
+  const bits = [];
+  if (q.gun) {
+    q.gun.assignedTo = "pocket";
+    if (totalDrugs() + pocketGunCount() >= G.maxCapacity + 1) {
+      if (G.hq && hqUsedSlots() < hqCapacity()) q.gun.assignedTo = null;
+      else { q.gun.assignedTo = "seized"; bits.push("gun lost"); }
+    }
+    if (q.gun.assignedTo !== "seized") bits.push("gun kept");
+    syncGunGear();
+  }
+  if (q.car) {
+    if (!G.playerCar) { G.playerCar = q.car; bits.push("car kept"); }
+    else bits.push("car lost");
+  }
+  if (q.bag) {
+    if (!G.bag) { G.bag = q.bag; G.maxCapacity = G.hq ? hqCapacity() : 100 + q.bag.slots; bits.push("bag kept"); }
+    else bits.push("bag lost");
+  }
+  if (q.armor) { G.gear = G.gear.filter(x => !x.armor); G.gear.push({ name: q.armor.name, desc: q.armor.desc, armor: q.armor.armor }); bits.push("armor kept"); }
+  if (q.device) { spareDevices().push(q.device); bits.push("tech kept"); }
+  delete G.crewGear[name];
+  G.crew = G.crew.filter(n => n !== name);
+  if (G.crewStatus) delete G.crewStatus[name];
+  return bits.join(", ");
+}
+
+function resolveDeployment(d) {
+  const def = jobDef(d.key);
+  const ok = Math.random() * 100 < missionSuccessPct(d.power, d.grade);
+  if (ok) {
+    const got = [];
+    const r = (def && def.reward) || {};
+    if (r.cash) { const n = r.cash[0] + Math.floor(Math.random() * (r.cash[1] - r.cash[0] + 1)); G.cash += n; got.push(`$${n.toLocaleString()}`); }
+    (r.drugs || []).forEach(x => {
+      const n = x[1] + Math.floor(Math.random() * (x[2] - x[1] + 1));
+      const lost = grantDeployDrugs(x[0], n);
+      got.push(`${n - lost} ${DRUGS[x[0]].name}${lost > 0 ? ` (${lost} lost, no room)` : ""}`);
+    });
+    (r.guns || []).forEach(g => {
+      if (Math.random() < g[2]) got.push(grantDeployGun(g[0], g[1]) ? g[0] : `${g[0]} (lost, no room)`);
+    });
+    (r.tech || []).forEach(t => { spareDevices().push({ ...t }); got.push(t.name); });
+    addLog(`${d.name} complete: ${got.join(" + ")}. Squad home (${d.squad.join(", ")}).`, "good");
+  } else {
+    const hurt = [];
+    const dead = [];
+    const rate = JOB_DEATH[d.grade] || 0;
+    d.squad.forEach(n => {
+      if (!G.crew.includes(n)) return;
+      if (rate > 0 && Math.random() < rate) {
+        const kept = crewMemberDies(n);
+        dead.push(`${n}${kept ? ` (${kept})` : ""}`);
+      } else {
+        let days = 1 + Math.floor(Math.random() * 3);
+        if (crewHas("Medic")) days = Math.max(1, days - 1);
+        if (!G.crewStatus) G.crewStatus = {};
+        G.crewStatus[n] = { inj: days };
+        hurt.push(`${n} (${days}d)`);
+      }
+    });
+    addLog(`${d.name} failed.${hurt.length ? ` Injured: ${hurt.join(", ")}.` : ""}${dead.length ? ` KILLED: ${dead.join(", ")}.` : ""}`, "bad");
+  }
+  refreshStats();
 }
 
 const HQ_OPTIONS = [
@@ -2156,8 +2588,10 @@ function renderCrewHQ() {
 
   c.innerHTML = `
     <div class="title">HQ</div>
-    <div class="info-box">Current HQ: ${G.hq || "None"} — Capacity: ${G.hq ? hqCapacity() : G.maxCapacity}${G.hq ? ` — Used: ${totalHQDrugs() + gunHQCount()} — Crates: ${G.hqCrates || 0}/${hqCrateCap()}` : ""}</div>
+    <div class="info-box">Current HQ: ${G.hq || "None"} — Capacity: ${G.hq ? hqCapacity() : G.maxCapacity}${G.hq ? ` — Used: ${hqUsedSlots()} (servers hold ${serverCount() * SERVER_HQ_SLOTS}) — Crates: ${G.hqCrates || 0} · Containers: ${G.hqContainers || 0} · Slots: ${hqUnits()}/${hqCrateCap()} · Servers: ${serverCount()}/${serverCap()}` : ""}</div>
     ${hqRows}
+    ${G.hq ? `<div class="title" style="margin-top:8px">SERVERS (${serverCount()}/${serverCap()})</div>
+    <div class="file-row"><span class="file-type text" style="min-width:90px;font-weight:bold">Server Rack</span><span style="flex:1;color:#aaa;font-size:10px">+${SERVER_FILE_SLOTS} file slots · +1 script · 4 HQ slots · never sold, moves with you</span><span style="font-size:10px;color:#ffcc00;margin:0 6px">$${SERVER_COST.toLocaleString()}</span><button class="menu-btn" style="width:auto;padding:2px 8px;margin:0;font-size:10px;${serverCount() >= serverCap() ? "opacity:0.3" : ""}" ${serverCount() >= serverCap() ? "disabled" : ""} onclick="buyServer()">BUY</button></div>` : ""}
     ${G.hq ? `<div class="title" style="margin-top:8px">ARMORY</div>${gunHQCount() > 0 ? G.guns.map((gun, i) => !gun.assignedTo ? `<div class="file-row"><span class="file-type text" style="min-width:90px;font-weight:bold">${gun.name}</span><span style="flex:1;color:#aaa;font-size:10px">+${gun.damage} damage</span><button class="menu-btn" style="width:auto;padding:2px 8px;margin:0;font-size:10px" onclick="renderGunAssignment(${i})">ASSIGN</button></div>` : "").join("") : `<div style="color:#888;font-size:11px;padding:6px">No unused guns in HQ.</div>`}` : ""}
     <button class="menu-btn back-btn" onclick="renderCrew()">BACK</button>`;
 }
@@ -2194,11 +2628,34 @@ function crewHas(name) {
 
 // ===== HACK TAB =====
 const FILE_TYPES = [
-  { name: "text",  label: "TXT", baseSize: 20,  baseValue: 2,   color: "#4fc3f7" },
-  { name: "image", label: "IMG", baseSize: 80,  baseValue: 5,   color: "#ce93d8" },
-  { name: "sound", label: "SND", baseSize: 200, baseValue: 10,  color: "#ffb74d" },
-  { name: "video", label: "VID", baseSize: 500, baseValue: 200, color: "#ef5350" }
+  { name: "text",  label: "TXT", baseSize: 20,  baseValue: 2,   color: "#4fc3f7", unlockCost: 0 },
+  { name: "image", label: "IMG", baseSize: 80,  baseValue: 5,   color: "#ce93d8", unlockCost: 30 },
+  { name: "sound", label: "SND", baseSize: 200, baseValue: 10,  color: "#ffb74d", unlockCost: 100 },
+  { name: "video", label: "VID", baseSize: 500, baseValue: 200, color: "#ef5350", unlockCost: 250 }
 ];
+
+// Only text files start unlocked — the rest are bought with RP.
+function hackFileTypes() {
+  const h = hackState();
+  if (!Array.isArray(h.fileTypes) || h.fileTypes.length !== FILE_TYPES.length) {
+    const old = Array.isArray(h.fileTypes) ? h.fileTypes : [];
+    h.fileTypes = FILE_TYPES.map((t, i) => i === 0 ? true : !!old[i]);
+  }
+  if (!h.fileTypes.some(Boolean)) h.fileTypes[0] = true;
+  return h.fileTypes;
+}
+
+function buyFileType(idx) {
+  const h = hackState();
+  const types = hackFileTypes();
+  const t = FILE_TYPES[idx];
+  if (!t || types[idx]) return;
+  if (h.research < t.unlockCost) { addLog("Not enough RP!", "bad"); return; }
+  h.research -= t.unlockCost;
+  types[idx] = true;
+  addLog(`${t.label} files unlocked for download.`, "good");
+  renderHack();
+}
 
 const HACK_UPGRADES = [
   { key: "dlSpeed",       name: "Download Speed", desc: "Files per scan",  baseCost: 25,   costMult: 1.8 },
@@ -2210,6 +2667,69 @@ const HACK_UPGRADES = [
 ];
 
 function hackState() { return G.hack; }
+
+// High-tech phone skin: titanium frame + banded glass crossfade
+// the moment a high-tech phone is equipped.
+function hasHighPhone() {
+  return Array.isArray(G.devices) && G.devices.some(d => d.type === "phone" && d.tech === "high");
+}
+function applyPhoneSkin() {
+  try { document.body.classList.toggle("skin-high", hasHighPhone()); } catch (e) {}
+}
+
+// ===== PHONE BATTERY =====
+// Hacks run on the phone's cell. Bigger phones hold more charge.
+// Sleeping recharges to full (that's the daily pacing lever).
+const PHONE_BATTERY = { low: 100, medium: 220, high: 400 };
+
+function batteryMax() {
+  const ph = (G.devices || []).find(d => d.type === "phone");
+  return (ph && PHONE_BATTERY[ph.tech]) || 100;
+}
+
+function batteryCharge() { return Math.min(G.battery == null ? batteryMax() : G.battery, batteryMax()); }
+
+// At 5% or less the phone can't scan — go progress the day instead.
+function batteryBlocksScan() { return batteryCharge() / batteryMax() <= 0.05; }
+
+// Power cost per hack. PCs take sell/research bulk uploads off the phone;
+// servers move everything except the actual scan off the phone.
+function hackPowerCost(action) {
+  const server = (G.servers || 0) > 0;
+  if (server && action !== "scanNetwork") return 0;
+  switch (action) {
+    case "scanNetwork": return 5;
+    case "scan": return 3;
+    case "scanAll": return 4;
+    case "enhance": case "compress": case "sell": case "research": return 2;
+    case "enhanceAll": case "compressAll": return 4;
+    case "sellAll": case "researchAll": return hasPcDevice() ? 0 : 4;
+    default: return 0;
+  }
+}
+
+function spendBattery(cost, what, silent) {
+  if (!(cost > 0)) return true;
+  const max = batteryMax();
+  G.battery = batteryCharge();
+  if (G.battery < cost) { if (!silent) addLog(`Not enough battery for ${what} (${Math.floor(G.battery)}/${max}). Sleep to recharge.`, "bad"); return false; }
+  G.battery -= cost;
+  updateBatteryUI();
+  return true;
+}
+
+function updateBatteryUI() {
+  const scr = document.getElementById("screen");
+  if (scr && scr.classList && scr.classList.contains("spooked")) return;
+  const pct = Math.max(0, Math.min(100, Math.round(batteryCharge() / batteryMax() * 100)));
+  const batt = document.querySelector(".statusbar .batt i");
+  if (batt) {
+    batt.style.width = pct + "%";
+    batt.style.background = pct <= 20 ? "#ff3b30" : "";
+  }
+  const hb = document.getElementById("hack-batt");
+  if (hb) hb.textContent = `BATTERY ${Math.floor(batteryCharge())}/${batteryMax()}${pct <= 5 ? " — TOO LOW TO SCAN" : ""}`;
+}
 
 function hackUpgradeCost(key) {
   const u = HACK_UPGRADES.find(x => x.key === key);
@@ -2248,8 +2768,20 @@ function updateInfectionUI() {
   if (n < 15) G.hack.warned20 = false;
 }
 
+function updateHackStorageUI() {
+  const h = hackState();
+  const t = document.getElementById("hack-storage");
+  const bar = document.getElementById("hack-storage-bar");
+  const full = document.getElementById("hack-storage-full");
+  const pct = Math.min(100, Math.round(h.files.length / fileCap() * 100));
+  if (t) t.textContent = `STORAGE ${h.files.length}/${fileCap()}`;
+  if (bar) bar.style.width = pct + "%";
+  if (full) full.style.display = h.files.length >= fileCap() ? "" : "none";
+}
+
 function updateHackQueueUI() {
   const h = hackState();
+  updateHackStorageUI();
   const q = document.getElementById("hack-scan-queue");
   const p = document.getElementById("hack-scan-progress");
   const bar = document.getElementById("hack-scan-progress-bar");
@@ -2284,8 +2816,10 @@ function scanNetwork() {
   // Do NOT re-render the HACK panel here. Replacing the button's DOM node
   // during a click can swallow rapid follow-up clicks. Queue every click
   // synchronously, up to the 10-scan cap, then update only the queue display.
+  if (batteryBlocksScan()) { addLog("Battery at 5% or less — phone can't scan. Sleep to recharge.", "bad"); return; }
   if (h.scanQueue >= hackQueueMax()) return;
-  if (h.files.length >= MAX_HACK_FILES) { addLog(`File storage full (${MAX_HACK_FILES}). Sell, research or trash files.`, "bad"); return; }
+  if (h.files.length >= fileCap()) { addLog(`File storage full (${fileCap()}). Sell, research or trash files.`, "bad"); return; }
+  // No charge here — the network fee lands per file as downloads complete.
   h.scanQueue++;
   if (!h.downloading) startNextScan();
   updateHackQueueUI();
@@ -2305,10 +2839,12 @@ function startNextScan() {
 function finishDownload() {
   const h = hackState();
   const count = h.dlCount;
-  let skipped = false;
+  const DL_TYPE_MULT = [1, 2, 3, 5];
+  let skipped = false, netCost = 0;
   for (let i = 0; i < count; i++) {
-    if (h.files.length >= MAX_HACK_FILES) { skipped = true; break; }
-    const typeIdx = Math.floor(Math.random() * FILE_TYPES.length);
+    if (h.files.length >= fileCap()) { skipped = true; break; }
+    const unlocked = hackFileTypes().map((u, i) => u ? i : -1).filter(i => i >= 0);
+    const typeIdx = unlocked[Math.floor(Math.random() * unlocked.length)];
     const t = FILE_TYPES[typeIdx];
     const variance = 0.5 + Math.random();
     // infection + strain are decided at download, hidden until scanned.
@@ -2328,11 +2864,44 @@ function finishDownload() {
       infected: isInf,
       strain: strain
     });
+    // Heavier formats cost more juice: 0.5 base x TXT 1, IMG 2, SND 3, VID 5.
+    netCost += 0.5 * (DL_TYPE_MULT[typeIdx] || 1);
   }
   h.downloading = false;
   h.dlProgress = 0;
   h.dlCount = 0;
-  if (skipped) addLog(`File storage full (${MAX_HACK_FILES}). Sell, research or trash files.`, "bad");
+  // Network fee lands per file actually delivered (never on tap, never for skipped).
+  if (netCost > 0) {
+    G.battery = Math.max(0, batteryCharge() - netCost);
+    updateBatteryUI();
+  }
+  if (skipped) addLog(`File storage full (${fileCap()}). Sell, research or trash files.`, "bad");
+  // Installed scripts fire on new arrivals (scan also needs a scanner).
+  // Routines spend battery like manual hacks; dead files wait for top-up.
+  const sc = hackScripts();
+  let autoStarved = false;
+  const autoSpend = (action) => {
+    const cost = hackPowerCost(action);
+    if (cost > 0 && batteryCharge() < cost) { autoStarved = true; return false; }
+    return spendBattery(cost, "auto-" + action, true);
+  };
+  if (sc.enhance.owned && sc.enhance.on && h.enhancerLv > 0) {
+    h.files.forEach(f => {
+      if (!f.enhanced && !f.processing) {
+        if (!autoSpend("enhance")) return;
+        startFileProcess(f, "enhance");
+      }
+    });
+  }
+  if (sc.compress.owned && sc.compress.on && h.compressorLv > 0) {
+    h.files.forEach(f => {
+      if (!f.compressed && !f.processing) {
+        if (!autoSpend("compress")) return;
+        startFileProcess(f, "compress");
+      }
+    });
+  }
+  if (autoStarved) addLog("Auto routines paused — low battery. Sleep to recharge.", "bad");
   startNextScan();
 }
 
@@ -2389,13 +2958,17 @@ function processFile(id, action) {
 
   if (action === "enhance") {
     if (f.enhanced || h.enhancerLv <= 0) return;
+    if (!spendBattery(hackPowerCost("enhance"), "enhance")) return;
     startFileProcess(f, action);
   } else if (action === "compress") {
     if (f.compressed || h.compressorLv <= 0) return;
+    if (!spendBattery(hackPowerCost("compress"), "compress")) return;
     startFileProcess(f, action);
   } else if (action === "scan") {
     if (f.scanned || f.scanning || h.scannerLv <= 0) return;
     if (f.strain === "dark") { addLog("Scanner can't lock onto this file. Something darker.", "bad"); return; }
+    if (batteryBlocksScan()) { addLog("Battery at 5% or less — phone can't scan. Sleep to recharge.", "bad"); return; }
+    // No charge here — each scan pays for itself on completion.
     f.scanning = true;
     f.scanProgress = 0;
     f.scanDuration = Math.max(500, f.size * 15 / processSpeed());
@@ -2406,10 +2979,12 @@ function processFile(id, action) {
   } else if (action === "sell") {
     if (f.scanned && f.infected) return;
     if (!f.scanned && f.infected && f.strain === "sealed") { addLog("Buyer smells something wrong. Scan it first.", "bad"); return; }
+    if (!spendBattery(hackPowerCost("sell"), "sell")) return;
     startFileProcess(f, action);
   } else if (action === "research") {
     if (f.scanned && f.infected) return;
     if (f.strain === "dark" && f.infected && !f.fixed) { addLog("Research lab rejects the dark strain.", "bad"); return; }
+    if (!spendBattery(hackPowerCost("research"), "research")) return;
     startFileProcess(f, action);
   } else if (action === "trash") {
     h.files = h.files.filter(x => x.id !== id);
@@ -2418,7 +2993,20 @@ function processFile(id, action) {
   patchHackFileRow(id);
 }
 
+const HACK_XP_PER_SCAN = 0.03;
+
+function trimXp(x) { return (Math.round(x * 100) / 100).toString(); }
+
 function finishScan(f) {
+  // Scans are fast, so each one is worth a sliver of hacking XP.
+  const hBefore = skillLevel(G.stats.hacking);
+  G.stats.hacking = Math.round((G.stats.hacking + HACK_XP_PER_SCAN) * 100) / 100;
+  if (skillLevel(G.stats.hacking) > hBefore) addLog(`Hacking Lv.${skillLevel(G.stats.hacking)}!`, "good");
+  // Scan fee lands here on completion, never on tap: a random 0.5–1
+  // sip per file so the starter cell doesn't melt. Infected files cost
+  // an extra 0.2 to burn through. Partial okay, silent.
+  G.battery = Math.max(0, batteryCharge() - (0.5 + Math.random() * 0.5 + (f.infected ? 0.2 : 0)));
+  updateBatteryUI();
   f.scanning = false;
   f.scanned = true;
   // infection was pre-rolled at download; scanning only reveals it.
@@ -2426,6 +3014,9 @@ function finishScan(f) {
   if (!f.infected) {
     f.value = Math.round(f.value * 1.5);
     f.clean = true;
+    // Installed scripts: clean files upload on their own (sell wins ties).
+    if (scriptOn("sell")) { if (spendBattery(hackPowerCost("sell"), "auto-sell", true)) startFileProcess(f, "sell"); }
+    else if (scriptOn("research")) { if (spendBattery(hackPowerCost("research"), "auto-research", true)) startFileProcess(f, "research"); }
   }
 }
 
@@ -2465,6 +3056,21 @@ function scanTick(now = performance.now()) {
   lastHackTick = now;
   if (!elapsed) return;
 
+  let needsHackRender = false;
+
+  // AUTO-SCAN script: auto-queues a network scan every few seconds
+  // (same gates as a manual tap, fee lands on downloaded files).
+  const scAuto = hackScripts();
+  if (scAuto.scan.owned && scAuto.scan.on && !batteryBlocksScan() &&
+      h.scanQueue < hackQueueMax() && h.files.length < fileCap()) {
+    if (now - (h.lastAutoNet || 0) >= 4000) {
+      h.lastAutoNet = now;
+      h.scanQueue++;
+      if (!h.downloading) startNextScan();
+      needsHackRender = true;
+    }
+  }
+
   // Idle (nothing downloading/scanning/processing): recheck once a second
   // instead of ten times a second. No gameplay effect — no state to advance.
   if (!hackBusy(h)) {
@@ -2472,7 +3078,6 @@ function scanTick(now = performance.now()) {
     lastIdleTick = now;
   }
 
-  let needsHackRender = false;
 
   if (h.downloading) {
     h.dlProgress += elapsed;
@@ -2519,6 +3124,7 @@ function scanTick(now = performance.now()) {
 
 function sellAllFiles() {
   const h = hackState();
+  if (!spendBattery(hackPowerCost("sellAll"), "sell all")) return;
   h.files.forEach(f => {
     if ((f.scanned && f.infected) || (!f.scanned && f.infected && f.strain === "sealed") || f.processing) return;
     startFileProcess(f, "sell");
@@ -2528,6 +3134,7 @@ function sellAllFiles() {
 
 function researchAllFiles() {
   const h = hackState();
+  if (!spendBattery(hackPowerCost("researchAll"), "research all")) return;
   h.files.forEach(f => {
     if ((f.scanned && f.infected) || (f.infected && f.strain === "dark" && !f.fixed) || f.processing) return;
     startFileProcess(f, "research");
@@ -2538,6 +3145,8 @@ function researchAllFiles() {
 function scanAllFiles() {
   const h = hackState();
   if (h.scannerLv <= 0) return;
+  if (batteryBlocksScan()) { addLog("Battery at 5% or less — phone can't scan. Sleep to recharge.", "bad"); return; }
+  // No charge here — each scan pays for itself on completion.
   h.files.forEach(f => {
     if (f.scanned || f.scanning || f.strain === "dark") return;
     f.scanning = true;
@@ -2550,6 +3159,7 @@ function scanAllFiles() {
 function enhanceAllFiles() {
   const h = hackState();
   if (h.enhancerLv <= 0) return;
+  if (!spendBattery(hackPowerCost("enhanceAll"), "enhance all")) return;
   h.files.forEach(f => {
     if (!f.enhanced && !f.processing) startFileProcess(f, "enhance");
   });
@@ -2559,9 +3169,65 @@ function enhanceAllFiles() {
 function compressAllFiles() {
   const h = hackState();
   if (h.compressorLv <= 0) return;
+  if (!spendBattery(hackPowerCost("compressAll"), "compress all")) return;
   h.files.forEach(f => {
     if (!f.compressed && !f.processing) startFileProcess(f, "compress");
   });
+  renderHack();
+}
+
+function switchHackTab(t) { hackState()._tab = t; renderHack(); }
+
+// Auto-scripts: one-time RP unlock (Hacker member required to install),
+// then free ON/OFF toggles. Scan covers virus detection on arrival.
+const HACK_SCRIPTS = [
+  { key: "scan",     name: "AUTO-SCAN",     desc: "Auto-queues a network scan every few seconds", cost: 100 },
+  { key: "sell",     name: "AUTO-SELL",     desc: "Clean files auto-upload for cash after scan",    cost: 100 },
+  { key: "research", name: "AUTO-RESEARCH", desc: "Clean files auto-upload for RP (skipped if AUTO-SELL is on)", cost: 150 },
+  { key: "enhance",  name: "AUTO-ENHANCE",  desc: "New downloads start enhancing on arrival",       cost: 200 },
+  { key: "compress", name: "AUTO-COMPRESS", desc: "New downloads start compressing on arrival",     cost: 200 },
+];
+
+function hackScripts() {
+  const h = hackState();
+  if (!h.scripts || typeof h.scripts !== "object") h.scripts = {};
+  HACK_SCRIPTS.forEach(s => {
+    const cur = h.scripts[s.key];
+    if (!cur || typeof cur !== "object") h.scripts[s.key] = { owned: false, on: false };
+    else { cur.owned = !!cur.owned; cur.on = !!cur.on; }
+  });
+  // Migrate legacy free toggles into owned scripts.
+  if (h.autoScan && !h.scripts.scan.owned) { h.scripts.scan.owned = true; h.scripts.scan.on = true; }
+  if (h.autoSell && !h.scripts.sell.owned) { h.scripts.sell.owned = true; h.scripts.sell.on = true; }
+  return h.scripts;
+}
+
+function scriptOn(key) {
+  const s = hackScripts()[key];
+  return !!(s && s.owned && s.on);
+}
+
+function toggleHackScript(key) {
+  const h = hackState();
+  const def = HACK_SCRIPTS.find(s => s.key === key);
+  const s = hackScripts()[key];
+  if (!def || !s) return;
+  if (!s.owned) {
+    if (!crewHas("Hacker")) { addLog("Only a Hacker crew member can install scripts.", "bad"); return; }
+    if (h.research < def.cost) { addLog("Not enough RP!", "bad"); return; }
+    h.research -= def.cost;
+    s.owned = true;
+    s.on = true;
+    addLog(`${def.name} installed and ON.`, "good");
+  } else if (!s.on) {
+    // Base 1 + Hacker 1 + 1 per server. Already-on scripts stay on.
+    if (activeScriptCount() >= activeScriptCap()) { addLog(`Script limit reached (${activeScriptCount()}/${activeScriptCap()}). Servers and Hackers raise it.`, "bad"); return; }
+    s.on = true;
+    addLog(`${def.name} ON.`, "neutral");
+  } else {
+    s.on = false;
+    addLog(`${def.name} OFF.`, "neutral");
+  }
   renderHack();
 }
 
@@ -2572,9 +3238,96 @@ function renderHack() {
     return;
   }
   const h = hackState();
+  const sub = h._tab || "main";
   const c = document.getElementById("content");
+  const tabBtn = (id, label) => `<button class="menu-btn" style="flex:1;text-align:center;${sub === id ? "background:#00ff41;color:#0a0a0a" : ""}" onclick="switchHackTab('${id}')">${label}</button>`;
 
-  const upgrades = HACK_UPGRADES.map(u => {
+  if (sub === "upgrades") {
+    c.innerHTML = `<div style="display:flex;gap:0;margin-bottom:6px">${tabBtn("main", "MAIN")}${tabBtn("upgrades", "UPGRADES")}${tabBtn("scripts", "SCRIPTS")}${tabBtn("storage", "STORAGE")}</div>
+      <div class="title">UPGRADES</div>
+      ${hackUpgradesHtml()}
+      <div class="title" style="margin-top:8px">FILE TYPES</div>
+      ${hackFileTypeRows()}`;
+    return;
+  }
+  if (sub === "scripts") {
+    const hasHacker = crewHas("Hacker");
+    const rows = HACK_SCRIPTS.map(s => {
+      const st = hackScripts()[s.key];
+      let btn;
+      if (st.owned) {
+        btn = `<button class="menu-btn" style="width:auto;padding:2px 8px;margin:0;font-size:10px" onclick="toggleHackScript('${s.key}')">${st.on ? "ON" : "OFF"}</button>`;
+      } else if (!hasHacker) {
+        btn = `<button class="menu-btn" style="width:auto;padding:2px 8px;margin:0;font-size:10px;opacity:0.3" disabled>NEEDS HACKER</button>`;
+      } else {
+        const canBuy = h.research >= s.cost;
+        btn = `<button class="menu-btn" style="width:auto;padding:2px 8px;margin:0;font-size:10px;${canBuy ? "" : "opacity:0.3"}" onclick="toggleHackScript('${s.key}')">RP ${s.cost.toLocaleString()}</button>`;
+      }
+      return `<div class="file-row"><span class="file-type text" style="min-width:90px;font-weight:bold">${s.name}</span><span style="flex:1;color:#aaa;font-size:10px">${s.desc}</span>${btn}</div>`;
+    }).join("");
+    c.innerHTML = `<div style="display:flex;gap:0;margin-bottom:6px">${tabBtn("main", "MAIN")}${tabBtn("upgrades", "UPGRADES")}${tabBtn("scripts", "SCRIPTS")}${tabBtn("storage", "STORAGE")}</div>
+      <div class="title">SCRIPTS</div>
+      <div class="info-box">Routines run themselves. Installing needs a Hacker in crew.<br>Active ${activeScriptCount()}/${activeScriptCap()} (base 1${crewHas("Hacker") ? " + Hacker 1" : ""}${serverCount() ? ` + Servers ${serverCount()}` : ""}).</div>
+      ${rows}`;
+    return;
+  }
+  if (sub === "storage") {
+    c.innerHTML = `<div style="display:flex;gap:0;margin-bottom:6px">${tabBtn("main", "MAIN")}${tabBtn("upgrades", "UPGRADES")}${tabBtn("scripts", "SCRIPTS")}${tabBtn("storage", "STORAGE")}</div>
+      <div class="title">STORAGE</div>
+      ${hackStorageChart()}
+      <div class="title" style="margin-top:8px" id="hackFileCount">FILES (${h.files.length})</div>
+      <div style="color:#888;font-size:10px;margin-bottom:4px">Queue scans like an RTS, switch tabs while they run. Sell/research upload over time; value slows enhance, size slows compression. CPU upgrades speed processing.</div>
+      <div id="hackFileList">${hackFileListHtml() || '<div style="color:#888;font-size:11px;padding:6px">Click SCAN NETWORK to grab files.</div>'}</div>`;
+    return;
+  }
+
+  // MAIN: scan network + stats + all batch routines. Upgrades and files
+  // live in their own sub-tabs.
+  c.innerHTML = `
+    <div style="display:flex;gap:0;margin-bottom:6px">${tabBtn("main", "MAIN")}${tabBtn("upgrades", "UPGRADES")}${tabBtn("scripts", "SCRIPTS")}${tabBtn("storage", "STORAGE")}</div>
+    <div class="title">FILE PROCESSING</div>
+    <div style="border:1px solid #00ff41;padding:6px;margin-bottom:4px;text-align:center">
+      <button class="menu-btn" onclick="scanNetwork()" style="text-align:center;margin:0">SCAN NETWORK +1</button>
+      <div id="hack-batt" style="font-size:10px;color:#888;margin-top:4px">BATTERY ${Math.floor(batteryCharge())}/${batteryMax()}</div>
+      <div id="hack-storage" style="font-size:10px;color:#888;margin-top:4px">STORAGE ${h.files.length}/${fileCap()}</div>
+      <div class="scan-bar" style="margin-top:2px"><div id="hack-storage-bar" class="scan-bar-fill" style="width:${Math.min(100, Math.round(h.files.length / fileCap() * 100))}%"></div></div>
+      <div id="hack-storage-full" style="font-size:10px;color:#ff3b30;font-weight:700;margin-top:4px;${h.files.length >= fileCap() ? "" : "display:none;"}">STORAGE FULL — sell, research or trash files to scan again</div>
+      <div id="hack-scan-queue" style="font-size:10px;color:#888;margin-top:4px">QUEUE: ${h.scanQueue}/${hackQueueMax()}${h.downloading ? ` · DOWNLOADING ${h.dlCount} FILE${h.dlCount > 1 ? 'S' : ''}` : ''}</div>
+      <div id="hack-scan-progress-wrap" style="${h.downloading ? '' : 'display:none;'}">
+        <div id="hack-scan-progress" style="font-size:10px;color:#ffcc00;margin:4px 0 2px">${h.downloading ? `CURRENT ${Math.min(100, Math.round((h.dlProgress / h.dlDuration) * 100))}%` : ''}</div>
+        <div class="scan-bar"><div id="hack-scan-progress-bar" class="scan-bar-fill" style="width:${h.downloading ? Math.min(100, Math.round((h.dlProgress / h.dlDuration) * 100)) : 0}%"></div></div>
+      </div>
+    </div>
+    <div class="hack-stats" id="hackStats">
+      ${hackStatsHtml()}
+    </div>
+    <div class="title" style="margin-top:8px">ROUTINES</div>
+    <div style="display:flex;gap:4px;margin-top:6px">
+      <button class="menu-btn" onclick="sellAllFiles()" style="flex:1;text-align:center">SELL ALL</button>
+      <button class="menu-btn" onclick="researchAllFiles()" style="flex:1;text-align:center">RESEARCH ALL</button>
+    </div>
+    ${h.scannerLv > 0 || h.enhancerLv > 0 || h.compressorLv > 0 ? `<div style="display:flex;gap:4px;margin-top:4px">
+      ${h.scannerLv > 0 ? `<button class="menu-btn" onclick="scanAllFiles()" style="flex:1;text-align:center">SCAN ALL</button>` : ""}
+      ${h.enhancerLv > 0 ? `<button class="menu-btn" onclick="enhanceAllFiles()" style="flex:1;text-align:center">ENHANCE ALL</button>` : ""}
+      ${h.compressorLv > 0 ? `<button class="menu-btn" onclick="compressAllFiles()" style="flex:1;text-align:center">COMPRESS ALL</button>` : ""}
+    </div>` : ""}
+  `;
+}
+
+function hackFileTypeRows() {
+  const h = hackState();
+  const types = hackFileTypes();
+  return FILE_TYPES.map((t, i) => {
+    if (i === 0) return `<div class="upgrade-row"><div class="upgrade-info"><div class="upgrade-name">${t.label} files</div><div class="upgrade-desc">Starter format — always available</div></div><span class="upgrade-lv">ON</span></div>`;
+    const owned = !!types[i];
+    const canBuy = h.research >= t.unlockCost;
+    return `<div class="upgrade-row"><div class="upgrade-info"><div class="upgrade-name">${t.label} files</div><div class="upgrade-desc">Unlock ${t.label} downloads</div></div>${owned ? `<span class="upgrade-lv">ON</span>` : `<button class="menu-btn" style="width:auto;padding:4px 10px;margin:0;${canBuy ? "" : "opacity:0.3"}" onclick="buyFileType(${i})">RP ${t.unlockCost.toLocaleString()}</button>`}</div>`;
+  }).join("");
+}
+
+function hackUpgradesHtml() {
+  const h = hackState();
+  return HACK_UPGRADES.map(u => {
     const cost = hackUpgradeCost(u.key);
     const lv = G.hack[u.key];
     const canBuy = h.research >= cost;
@@ -2588,38 +3341,68 @@ function renderHack() {
         onclick="buyHackUpgrade('${u.key}')">RP ${cost.toLocaleString()}</button>
     </div>`;
   }).join("");
-
-  const fileList = hackFileListHtml();
-
-  c.innerHTML = `
-    <div class="title">FILE PROCESSING</div>
-    <div style="border:1px solid #00ff41;padding:6px;margin-bottom:4px;text-align:center">
-      <button class="menu-btn" onclick="scanNetwork()" style="text-align:center;margin:0">SCAN NETWORK +1</button>
-      <div id="hack-scan-queue" style="font-size:10px;color:#888;margin-top:4px">QUEUE: ${h.scanQueue}/${hackQueueMax()}${h.downloading ? ` · DOWNLOADING ${h.dlCount} FILE${h.dlCount > 1 ? 'S' : ''}` : ''}</div>
-      <div id="hack-scan-progress-wrap" style="${h.downloading ? '' : 'display:none;'}">
-        <div id="hack-scan-progress" style="font-size:10px;color:#ffcc00;margin:4px 0 2px">${h.downloading ? `CURRENT ${Math.min(100, Math.round((h.dlProgress / h.dlDuration) * 100))}%` : ''}</div>
-        <div class="scan-bar"><div id="hack-scan-progress-bar" class="scan-bar-fill" style="width:${h.downloading ? Math.min(100, Math.round((h.dlProgress / h.dlDuration) * 100)) : 0}%"></div></div>
-      </div>
-    </div>
-    <div class="hack-stats" id="hackStats">
-      ${hackStatsHtml()}
-    </div>
-    <div class="title">UPGRADES</div>
-    ${upgrades}
-    <div style="display:flex;gap:4px;margin-top:6px">
-      <button class="menu-btn" onclick="sellAllFiles()" style="flex:1;text-align:center">SELL ALL</button>
-      <button class="menu-btn" onclick="researchAllFiles()" style="flex:1;text-align:center">RESEARCH ALL</button>
-    </div>
-    ${h.scannerLv > 0 || h.enhancerLv > 0 || h.compressorLv > 0 ? `<div style="display:flex;gap:4px;margin-top:4px">
-      ${h.scannerLv > 0 ? `<button class="menu-btn" onclick="scanAllFiles()" style="flex:1;text-align:center">SCAN ALL</button>` : ""}
-      ${h.enhancerLv > 0 ? `<button class="menu-btn" onclick="enhanceAllFiles()" style="flex:1;text-align:center">ENHANCE ALL</button>` : ""}
-      ${h.compressorLv > 0 ? `<button class="menu-btn" onclick="compressAllFiles()" style="flex:1;text-align:center">COMPRESS ALL</button>` : ""}
-    </div>` : ""}
-    <div class="title" style="margin-top:8px" id="hackFileCount">FILES (${h.files.length})</div>
-    <div style="color:#888;font-size:10px;margin-bottom:4px">Queue scans like an RTS, switch tabs while they run. Sell/research upload over time; value slows enhance, size slows compression. CPU upgrades speed processing.</div>
-    <div id="hackFileList">${fileList || '<div style="color:#888;font-size:11px;padding:6px">Click SCAN NETWORK to grab files.</div>'}</div>
-  `;
 }
+
+// Storage pie: cool = normal files, neutral = enhanced/compressed,
+// warm = infected or scanned. Gradient slices + grain overlay.
+function pieDonutSlice(cx, cy, r0, r1, a0, a1, fill) {
+  const p = (r, a) => [cx + r * Math.cos(a), cy + r * Math.sin(a)];
+  const span = a1 - a0;
+  if (span >= Math.PI * 2 - 0.001) {
+    const rmid = (r0 + r1) / 2;
+    return `<circle cx="${cx}" cy="${cy}" r="${rmid.toFixed(2)}" fill="none" stroke="${fill}" stroke-width="${(r1 - r0).toFixed(2)}"/>`;
+  }
+  const [x0, y0] = p(r1, a0), [x1, y1] = p(r1, a1);
+  const [x2, y2] = p(r0, a1), [x3, y3] = p(r0, a0);
+  const large = span > Math.PI ? 1 : 0;
+  return `<path d="M${x0.toFixed(2)},${y0.toFixed(2)} A${r1},${r1} 0 ${large},1 ${x1.toFixed(2)},${y1.toFixed(2)} L${x2.toFixed(2)},${y2.toFixed(2)} A${r0},${r0} 0 ${large},0 ${x3.toFixed(2)},${y3.toFixed(2)} Z" fill="${fill}"/>`;
+}
+
+function hackStorageChart() {
+  const h = hackState();
+  let cool = 0, neut = 0, warm = 0;
+  h.files.forEach(f => {
+    if (f.infected || f.scanned) warm++;
+    else if (f.enhanced || f.compressed) neut++;
+    else cool++;
+  });
+  const total = h.files.length;
+  const segs = [
+    { n: cool, fill: "url(#pieCool)", dot: "#38bdf8", label: "Normal" },
+    { n: neut, fill: "url(#pieNeut)", dot: "#94a3b8", label: "Enhanced/Cmp" },
+    { n: warm, fill: "url(#pieWarm)", dot: "#fb923c", label: "Infected/Scn" },
+  ].filter(s => s.n > 0);
+  let slices = "";
+  if (total > 0) {
+    let a = -Math.PI / 2;
+    segs.forEach(s => {
+      const span = (s.n / total) * Math.PI * 2;
+      slices += pieDonutSlice(60, 60, 34, 54, a, a + span, s.fill);
+      a += span;
+    });
+  } else {
+    slices = `<circle cx="60" cy="60" r="44" fill="none" stroke="color-mix(in srgb,var(--ink) 12%,transparent)" stroke-width="20"/>`;
+  }
+  const legend = segs.length
+    ? segs.map(s => `<span style="display:inline-flex;align-items:center;gap:4px;margin-right:10px"><span style="width:9px;height:9px;border-radius:50%;background:${s.dot}"></span>${s.label} ${s.n}</span>`).join("")
+    : `<span style="color:var(--ink2)">Empty</span>`;
+  return `<div style="display:flex;gap:12px;align-items:center;margin-bottom:4px">
+    <svg viewBox="0 0 120 120" style="width:120px;height:120px;flex:0 0 auto">
+      <defs>
+        <linearGradient id="pieCool" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2dd4bf"/><stop offset="1" stop-color="#0ea5e9"/></linearGradient>
+        <linearGradient id="pieNeut" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#cbd5e1"/><stop offset="1" stop-color="#64748b"/></linearGradient>
+        <linearGradient id="pieWarm" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fbbf24"/><stop offset="1" stop-color="#ef4444"/></linearGradient>
+        <filter id="pieGrain" x="-20%" y="-20%" width="140%" height="140%"><feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="2" stitchTiles="stitch" result="n"/><feColorMatrix in="n" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.7 0"/></filter>
+        <clipPath id="pieClip"><circle cx="60" cy="60" r="54"/></clipPath>
+      </defs>
+      <g clip-path="url(#pieClip)">${slices}<rect x="6" y="6" width="108" height="108" filter="url(#pieGrain)" opacity="0.22"/></g>
+      <text x="60" y="58" text-anchor="middle" style="font-size:17px;font-weight:700;fill:var(--ink);font-family:var(--mono)">${total}</text>
+      <text x="60" y="72" text-anchor="middle" style="font-size:8px;letter-spacing:1px;fill:var(--ink2)">FILES</text>
+    </svg>
+    <div style="font-size:11px;color:var(--ink2);line-height:2">${legend}</div>
+  </div>`;
+}
+  // End of orphaned pre-split main body (removed during sub-tab refactor).
 
 // Row/list/stats templates shared by full renders and single-row patches,
 // so per-file actions don't rebuild the whole panel (keeps scroll + focus).
@@ -2724,6 +3507,57 @@ const VIRUS_STATS = [
   { key: "lifespan", name: "Lifespan" }
 ];
 
+// Gooey orb looks. Keys mirror the shader panel: size/deformation/
+// lobes/morph/rotation, colors, lighting, liquid. Grown viruses drift
+// toward STRONG as they feed (see mutateVirusLook).
+const VIRUS_LOOK_BASE = { size: 0.2, deform: 0, lobes: 0.4, morph: 0, rot: 0, bg: "#070709", blend: "Auto", rimA: "#c2cbe6", rimB: "#8893b5", glowA: "#aeb8d8", glowB: "#6e7799", specular: 1.6, glint: 220, glow: 0.55, flow: 0.45, swirl: 2.2, brightness: 0.85, filaments: 1.2, core: 0.2 };
+const VIRUS_LOOK_DEAD = { size: 0.2, deform: 0, lobes: 0.4, morph: 0, rot: 0, bg: "#000000", blend: "Ink", rimA: "#000000", rimB: "#b7b7b7", glowA: "#44db44", glowB: "#20a585", specular: 0, glint: 300, glow: 0, flow: 0, swirl: 1, brightness: 0, filaments: 0, core: 0 };
+const VIRUS_LOOK_START = { size: 0.2, deform: 0.06, lobes: 1.05, morph: 1.08, rot: 0.02, bg: "#04120c", blend: "Ink", rimA: "#9cff4d", rimB: "#00e5a0", glowA: "#57ff3c", glowB: "#00ffc8", specular: 2.3, glint: 235, glow: 0.2, flow: 0.4, swirl: 1.75, brightness: 0.85, filaments: 1.7, core: 0.28 };
+const VIRUS_LOOK_STRONG = { size: 0.39, deform: 0.47, lobes: 2.1, morph: 1.4, rot: 0.1, bg: "#000000", blend: "Ink", rimA: "#185ce2", rimB: "#38ff9f", glowA: "#a718ff", glowB: "#180593", specular: 2.1, glint: 215, glow: 1.5, flow: 2, swirl: 4, brightness: 0.75, filaments: 3, core: 1 };
+
+const LOOK_RANGES = { size: [0.2, 0.4], deform: [0, 0.8], lobes: [0.4, 3.0], morph: [0, 2], rot: [0, 0.6], specular: [0, 3], glint: [20, 300], glow: [0, 1.5], flow: [0, 2], swirl: [1, 4], brightness: [0, 2.5], filaments: [0, 3], core: [0, 1] };
+const LOOK_COLORS = ["rimA", "rimB", "glowA", "glowB"];
+
+function hexToRgb01(hex) {
+  let h = String(hex).replace("#", "");
+  if (h.length === 3) h = h.split("").map(c => c + c).join("");
+  const n = parseInt(h, 16);
+  return [((n >> 16) & 255) / 255, ((n >> 8) & 255) / 255, (n & 255) / 255];
+}
+
+function hexLerp(a, b, t) {
+  const A = hexToRgb01(a), B = hexToRgb01(b);
+  const c = A.map((v, i) => Math.round((v + (B[i] - v) * t) * 255));
+  return "#" + c.map(v => Math.max(0, Math.min(255, v)).toString(16).padStart(2, "0")).join("");
+}
+
+function virusLookNow() {
+  const v = G.virus;
+  if (!v || !v.alive) return VIRUS_LOOK_DEAD;
+  return v.look || VIRUS_LOOK_START;
+}
+
+// Each feed randomly mutates a few look params toward the STRONG look.
+function mutateVirusLook() {
+  const v = G.virus;
+  if (!v || !v.alive) return;
+  if (!v.look) v.look = { ...VIRUS_LOOK_START };
+  const S = VIRUS_LOOK_STRONG;
+  for (let i = 0; i < 3; i++) {
+    if (Math.random() < 0.35) {
+      const k = LOOK_COLORS[Math.floor(Math.random() * LOOK_COLORS.length)];
+      v.look[k] = hexLerp(v.look[k], S[k], 0.15 + Math.random() * 0.2);
+    } else {
+      const keys = Object.keys(LOOK_RANGES);
+      const k = keys[Math.floor(Math.random() * keys.length)];
+      const range = LOOK_RANGES[k];
+      const t = 0.12 + Math.random() * 0.18;
+      const v0 = Number(v.look[k]) || 0;
+      v.look[k] = Math.max(range[0], Math.min(range[1], v0 + (S[k] - v0) * t + (Math.random() - 0.5) * 0.02 * (range[1] - range[0])));
+    }
+  }
+}
+
 function virusLevel(xp) {
   if (xp >= 200) return 5;
   if (xp >= 100) return 4;
@@ -2775,6 +3609,8 @@ function feedVirus(amount) {
       G.virus.stats[stat.key].xp += 1;
       G.virus.totalFed++;
     });
+    // Growing shifts the orb's look toward STRONG, a few random params at a time.
+    mutateVirusLook();
     G.hack.files = G.hack.files.filter(f => !fedIds.has(f.id));
   }
 
@@ -2793,6 +3629,7 @@ function createNewVirus() {
     lastFedDay: G.day,
     weakened: false,
     totalFed: 0,
+    look: { ...VIRUS_LOOK_START },
     stats: {
       speed: { xp: 0 },
       strength: { xp: 0 },
@@ -2804,42 +3641,267 @@ function createNewVirus() {
   renderVirus();
 }
 
+const VIRUS_VERT = `#version 300 es
+layout(location=0) in vec2 a_pos;
+out vec2 v_uv;
+void main(){ v_uv = a_pos * 0.5 + 0.5; gl_Position = vec4(a_pos, 0.0, 1.0); }`;
+
+const VIRUS_FRAG = `#version 300 es
+precision highp float;
+in vec2 v_uv;
+out vec4 fragColor;
+uniform float u_time;
+uniform vec2  u_res;
+uniform float u_radius;
+uniform float u_deform;
+uniform float u_freq;
+uniform float u_morphSpeed;
+uniform float u_rotSpeed;
+uniform float u_specular;
+uniform float u_shininess;
+uniform float u_glowStrength;
+uniform vec3  u_colBlue;
+uniform vec3  u_colMag;
+uniform vec3  u_glowA;
+uniform vec3  u_glowB;
+uniform float u_liquidSpeed;
+uniform float u_liquidScale;
+uniform float u_liquidBright;
+uniform float u_filament;
+uniform float u_core;
+uniform vec3  u_bg;
+uniform float u_blend;
+mat2 rot(float a){ float c=cos(a), s=sin(a); return mat2(c,-s,s,c); }
+float blobField(vec3 p){
+  float t = u_time * u_morphSpeed;
+  float f = u_freq;
+  float d = 0.0;
+  d += sin(p.x * 2.6 * f + t * 1.00);
+  d += sin(p.y * 2.9 * f - t * 0.80 + 1.3);
+  d += sin(p.z * 3.2 * f + t * 1.20 + 2.7);
+  d += sin((p.x + p.z) * 2.2 * f - t * 0.90 + 4.1);
+  d += sin((p.y - p.x) * 2.4 * f + t * 0.70 + 0.6);
+  return d * 0.2;
+}
+float mapBlob(vec3 p){
+  float t = u_time * u_rotSpeed;
+  p.xy *= rot(t * 0.7);
+  p.yz *= rot(t * 0.5);
+  float r = u_radius + u_deform * blobField(p);
+  return length(p) - r;
+}
+vec3 calcNormal(vec3 p){
+  vec2 e = vec2(0.0015, 0.0);
+  return normalize(vec3(
+    mapBlob(p + e.xyy) - mapBlob(p - e.xyy),
+    mapBlob(p + e.yxy) - mapBlob(p - e.yxy),
+    mapBlob(p + e.yyx) - mapBlob(p - e.yyx)));
+}
+float hash13(vec3 p3){ p3 = fract(p3 * 0.1031); p3 += dot(p3, p3.zyx + 31.32); return fract((p3.x + p3.y) * p3.z); }
+float vnoise3(vec3 p){
+  vec3 i = floor(p), f = fract(p); f = f * f * (3.0 - 2.0 * f);
+  return mix(mix(mix(hash13(i + vec3(0,0,0)), hash13(i + vec3(1,0,0)), f.x),
+                 mix(hash13(i + vec3(0,1,0)), hash13(i + vec3(1,1,0)), f.x), f.y),
+             mix(mix(hash13(i + vec3(0,0,1)), hash13(i + vec3(1,0,1)), f.x),
+                 mix(hash13(i + vec3(0,1,1)), hash13(i + vec3(1,1,1)), f.x), f.y), f.z);
+}
+float fbm3(vec3 p){ float v = 0.0, a = 0.5; for (int i = 0; i < 3; i++){ v += a * vnoise3(p); p *= 2.03; a *= 0.5; } return v; }
+float liquid(vec3 p){
+  float t = u_time * u_liquidSpeed;
+  p *= u_liquidScale;
+  p.xy *= rot(t * 0.15);
+  p.yz *= rot(t * 0.10);
+  vec3 w = vec3(fbm3(p + t * 0.2), fbm3(p + vec3(4.3, 1.2, -t * 0.15)), fbm3(p.zxy + vec3(7.7, 2.3, t * 0.10)));
+  return fbm3(p + 1.8 * w);
+}
+void main(){
+  vec2 p = v_uv * 2.0 - 1.0;
+  p.x *= u_res.x / u_res.y;
+  vec3 ro = vec3(0.0, 0.0, 3.0);
+  vec3 rd = normalize(vec3(p, -1.8));
+  float t = 0.0;
+  bool hit = false;
+  vec3 pos = ro;
+  float minD = 1e3;
+  for (int i = 0; i < 160; i++) {
+    pos = ro + rd * t;
+    float d = mapBlob(pos);
+    minD = min(minD, d);
+    if (d < 0.001) { hit = true; break; }
+    t += d * 0.40;
+    if (t > 6.0) break;
+  }
+  vec3 E = vec3(0.0);
+  if (hit) {
+    vec3 n = calcNormal(pos);
+    vec3 v = -rd;
+    float fres = pow(1.0 - max(dot(n, v), 0.0), 3.0);
+    vec3 rp = pos + rd * 0.04;
+    float trans = 1.0;
+    vec3 inner = vec3(0.0);
+    for (int k = 0; k < 10; k++) {
+      float raw = liquid(rp);
+      float dens = smoothstep(0.30, 0.70, raw);
+      float fil = pow(1.0 - abs(2.0 * raw - 1.0), 5.0);
+      vec3 c = mix(u_colMag, u_colBlue, 0.5 + 0.5 * sin(raw * 6.0 + u_time * 0.3 + rp.y * 2.5));
+      vec3 emit = c * dens * 0.55 + c * fil * u_filament + vec3(1.0) * pow(fil, 3.0) * u_filament * 0.4;
+      emit += u_colBlue * smoothstep(0.5, 0.0, length(rp)) * u_core;
+      inner += trans * emit * 0.17;
+      trans *= 0.84;
+      rp += rd * 0.11;
+      if (length(rp) > 1.0) break;
+    }
+    E += inner * (1.0 - fres * 0.6) * u_liquidBright;
+    vec3 rim = mix(u_colMag, u_colBlue, 0.5 + 0.5 * (n.x * 0.7 + n.y * 0.45));
+    E += rim * fres * 1.3;
+    vec3 l1 = normalize(vec3(0.6, 0.85, 0.6));
+    vec3 l2 = normalize(vec3(-0.7, 0.25, 0.55));
+    vec3 h1 = normalize(l1 + v);
+    vec3 h2 = normalize(l2 + v);
+    E += vec3(1.0) * pow(max(dot(n, h1), 0.0), u_shininess) * 1.3 * u_specular;
+    E += vec3(0.8, 0.9, 1.0) * pow(max(dot(n, h2), 0.0), u_shininess * 0.45) * 0.6 * u_specular;
+  } else {
+    float g = exp(-minD * 5.5);
+    float ang = atan(rd.y, rd.x);
+    vec3 gc = mix(u_glowA, u_glowB, 0.5 + 0.5 * sin(ang * 3.0 + u_time * 0.5));
+    E += (gc * g * 1.4 + vec3(0.6, 0.8, 1.0) * pow(g, 3.0) * 0.7) * u_glowStrength;
+  }
+  vec3 glowCol = u_bg + E;
+  float cov = clamp(max(E.r, max(E.g, E.b)), 0.0, 1.0);
+  vec3 inkCol = mix(u_bg, E / (1.0 + E), cov);
+  vec3 col = mix(glowCol, inkCol, u_blend);
+  fragColor = vec4(clamp(col, 0.0, 1.0), 1.0);
+}`;
+
+let virusGL = null;
+let virusRaf = 0;
+
+function virusBlendFor(v) {
+  if (v.blend === "Glow") return 0;
+  if (v.blend === "Ink") return 1;
+  const c = hexToRgb01(v.bg);
+  const lum = 0.299 * c[0] + 0.587 * c[1] + 0.114 * c[2];
+  return Math.min(Math.max((lum - 0.35) / 0.30, 0), 1);
+}
+
+function initVirusGL(canvas) {
+  try {
+    if (virusGL && virusGL.canvas === canvas) return virusGL;
+    stopVirusOrb();
+    const gl = canvas.getContext("webgl2", { antialias: false, alpha: false });
+    if (!gl) return null;
+    const compile = (type, src) => {
+      const sh = gl.createShader(type);
+      gl.shaderSource(sh, src);
+      gl.compileShader(sh);
+      if (!gl.getShaderParameter(sh, gl.COMPILE_STATUS)) return null;
+      return sh;
+    };
+    const vs = compile(gl.VERTEX_SHADER, VIRUS_VERT);
+    const fs = compile(gl.FRAGMENT_SHADER, VIRUS_FRAG);
+    if (!vs || !fs) return null;
+    const prog = gl.createProgram();
+    gl.attachShader(prog, vs);
+    gl.attachShader(prog, fs);
+    gl.linkProgram(prog);
+    if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) return null;
+    gl.useProgram(prog);
+    const buf = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]), gl.STATIC_DRAW);
+    gl.enableVertexAttribArray(0);
+    gl.vertexAttribPointer(0, 2, gl.FLOAT, false, 0, 0);
+    const U = {};
+    ["time", "res", "radius", "deform", "freq", "morphSpeed", "rotSpeed", "specular", "shininess", "glowStrength", "colBlue", "colMag", "glowA", "glowB", "liquidSpeed", "liquidScale", "liquidBright", "filament", "core", "bg", "blend"].forEach(k => {
+      U[k] = gl.getUniformLocation(prog, "u_" + k);
+    });
+    virusGL = { gl, prog, U, canvas };
+    return virusGL;
+  } catch (e) { return null; }
+}
+
+function stopVirusOrb() {
+  if (virusRaf) { try { cancelAnimationFrame(virusRaf); } catch (e) {} virusRaf = 0; }
+  virusGL = null;
+}
+
+function drawVirusOrbFrame(time) {
+  const ctx = virusGL;
+  if (!ctx) return;
+  const v = virusLookNow();
+  const gl = ctx.gl, U = ctx.U;
+  gl.uniform1f(U.time, time);
+  gl.uniform2f(U.res, ctx.canvas.width, ctx.canvas.height);
+  gl.uniform1f(U.radius, v.size);
+  gl.uniform1f(U.deform, v.deform);
+  gl.uniform1f(U.freq, v.lobes);
+  gl.uniform1f(U.morphSpeed, v.morph);
+  gl.uniform1f(U.rotSpeed, v.rot);
+  gl.uniform1f(U.specular, v.specular);
+  gl.uniform1f(U.shininess, v.glint);
+  gl.uniform1f(U.glowStrength, v.glow);
+  gl.uniform3fv(U.colBlue, hexToRgb01(v.rimA));
+  gl.uniform3fv(U.colMag, hexToRgb01(v.rimB));
+  gl.uniform3fv(U.glowA, hexToRgb01(v.glowA));
+  gl.uniform3fv(U.glowB, hexToRgb01(v.glowB));
+  gl.uniform1f(U.liquidSpeed, v.flow);
+  gl.uniform1f(U.liquidScale, v.swirl);
+  gl.uniform1f(U.liquidBright, v.brightness);
+  gl.uniform1f(U.filament, v.filaments);
+  gl.uniform1f(U.core, v.core);
+  gl.uniform3fv(U.bg, hexToRgb01(v.bg));
+  gl.uniform1f(U.blend, virusBlendFor(v));
+  const bg = hexToRgb01(v.bg);
+  gl.clearColor(bg[0], bg[1], bg[2], 1.0);
+  gl.clear(gl.COLOR_BUFFER_BIT);
+  gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+}
+
+function virusOrbLoop(now) {
+  virusRaf = 0;
+  const canvas = document.getElementById("virusOrb");
+  if (!canvas || !virusGL || virusGL.canvas !== canvas || G.tab !== "virus" || document.hidden) return;
+  // Dead viruses hold one frozen frame instead of a loop.
+  if (!G.virus || !G.virus.alive) { drawVirusOrbFrame(1.0); return; }
+  drawVirusOrbFrame(now * 0.001);
+  virusRaf = requestAnimationFrame(virusOrbLoop);
+}
+
+function drawVirusOrbFallback(canvas) {
+  try {
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+    const w = canvas.width = Math.max(280, Math.min(720, canvas.clientWidth * 2));
+    const h = canvas.height = 460;
+    const cx = w / 2, cy = h / 2, r = Math.min(w, h) * 0.30;
+    ctx.fillStyle = "#020202";
+    ctx.fillRect(0, 0, w, h);
+    const g = ctx.createRadialGradient(cx - r * 0.35, cy - r * 0.45, r * 0.08, cx, cy, r);
+    g.addColorStop(0, "#b8ffd0");
+    g.addColorStop(0.18, "#35ff75");
+    g.addColorStop(0.58, "#00a83c");
+    g.addColorStop(0.86, "#00451c");
+    g.addColorStop(1, "#001b0b");
+    ctx.beginPath();
+    ctx.arc(cx, cy, r, 0, Math.PI * 2);
+    ctx.fillStyle = g;
+    ctx.fill();
+  } catch (e) {}
+}
+
 function drawVirusOrb() {
   const canvas = document.getElementById("virusOrb");
-  if (!canvas) return;
-  const ctx = canvas.getContext("2d");
-  const w = canvas.width = Math.max(280, Math.min(720, canvas.clientWidth * 2));
-  const h = canvas.height = 520;
-  ctx.clearRect(0, 0, w, h);
-
-  const cx = w / 2, cy = h / 2, r = Math.min(w, h) * 0.30;
-  ctx.fillStyle = "#020202";
-  ctx.fillRect(0, 0, w, h);
-
-  // Static 3D-style orb: no animation and no shaders.
-  const g = ctx.createRadialGradient(cx - r * 0.35, cy - r * 0.45, r * 0.08, cx, cy, r);
-  g.addColorStop(0, "#b8ffd0");
-  g.addColorStop(0.18, "#35ff75");
-  g.addColorStop(0.58, "#00a83c");
-  g.addColorStop(0.86, "#00451c");
-  g.addColorStop(1, "#001b0b");
-  ctx.beginPath();
-  ctx.arc(cx, cy, r, 0, Math.PI * 2);
-  ctx.fillStyle = g;
-  ctx.fill();
-  ctx.strokeStyle = "#00ff41";
-  ctx.lineWidth = Math.max(2, w / 300);
-  ctx.stroke();
-
-  ctx.globalAlpha = 0.18;
-  ctx.strokeStyle = "#9dffb7";
-  ctx.lineWidth = 2;
-  for (let i = -2; i <= 2; i++) {
-    ctx.beginPath();
-    ctx.ellipse(cx, cy, r * (0.35 + Math.abs(i) * 0.13), r, 0, 0, Math.PI * 2);
-    ctx.stroke();
-  }
-  ctx.globalAlpha = 1;
+  if (!canvas) { stopVirusOrb(); return; }
+  // Cheap part only: size the canvas (CSS bg covers it meanwhile).
+  // Shader compile + first frame happen async so tab opens/feeds stay fast.
+  canvas.width = Math.max(280, Math.min(560, (canvas.clientWidth || 320) * 1.5));
+  canvas.height = 400;
+  stopVirusOrb();
+  setTimeout(() => {
+    if (document.getElementById("virusOrb") !== canvas || G.tab !== "virus") return;
+    if (!initVirusGL(canvas)) { drawVirusOrbFallback(canvas); return; }
+    if (!virusRaf) virusRaf = requestAnimationFrame(virusOrbLoop);
+  }, 30);
 }
 
 function renderVirus() {
@@ -2911,6 +3973,7 @@ const TRUNK_GEAR = [
   { name: "SWAT Gear", desc: "+150 armor", cost: 7000, armor: 150, requiresHQ: true },
   { name: "Escape Mask", desc: "+10% chance to escape cops", cost: 1800, mask: true, escapeBonus: 0.10, requiresHQ: true },
   { name: "HQ Crate", desc: "+10 HQ slots", cost: 1500, crate: true, requiresHQ: true, rare: true, spawnChance: 0.35 },
+  { name: "Shipping Container", desc: "+40 HQ slots (uses 1 crate slot)", cost: 10000, crate: true, container: true, requiresHQ: true, rare: true, spawnChance: 0.18 },
   { name: "Small Bag", desc: "+10 inventory slots", cost: 200, bagSlots: 10, rare: true, spawnChance: 0.24 },
   { name: "Backpack", desc: "+25 inventory slots", cost: 500, bagSlots: 25, rare: true, spawnChance: 0.14 },
   { name: "Duffle Bag", desc: "+50 inventory slots", cost: 1000, bagSlots: 50, rare: true, spawnChance: 0.07 },
@@ -3011,6 +4074,31 @@ function findMarketAsset(ticker) { return allMarketAssets().find(a => a.ticker =
 function money(v) { return v >= 1 ? "$" + Math.round(v).toLocaleString() : "$" + Number(v).toFixed(4); }
 function marketPct(v) { return `${v >= 0 ? "+" : ""}${v.toFixed(1)}%`; }
 function marketArrow(v) { return v > 0 ? "▲" : v < 0 ? "▼" : "—"; }
+function candlesMini(a) {
+  const closes = (a.history || []).slice(-7);
+  if (closes.length < 2) return "";
+  const W = 140, H = 36, n = closes.length, slot = W / n, bw = Math.max(5, slot * 0.55);
+  const bars = closes.map((c, i) => {
+    const o = i === 0 ? c : closes[i - 1];
+    const wick = a.vol * c * 0.15;
+    return { o, c, hi: Math.max(o, c) + wick, lo: Math.min(o, c) - wick };
+  });
+  let mn = Math.min(...bars.map(b => b.lo)), mx = Math.max(...bars.map(b => b.hi));
+  if (!(mx > mn)) { mx = mn + 1; }
+  const pad = (mx - mn) * 0.06;
+  mn -= pad; mx += pad;
+  const y = v => (H - 3) - ((v - mn) / (mx - mn)) * (H - 6);
+  const parts = bars.map((b, i) => {
+    const x = i * slot + slot / 2;
+    const up = b.c >= b.o;
+    const col = up ? "#30d158" : "#ff3b30";
+    const yO = y(b.o), yC = y(b.c);
+    const top = Math.min(yO, yC), hgt = Math.max(1.5, Math.abs(yC - yO));
+    return `<line x1="${x.toFixed(1)}" y1="${y(b.hi).toFixed(1)}" x2="${x.toFixed(1)}" y2="${y(b.lo).toFixed(1)}" stroke="${col}" stroke-width="1.2"/>` +
+      `<rect x="${(x - bw / 2).toFixed(1)}" y="${top.toFixed(1)}" width="${bw.toFixed(1)}" height="${hgt.toFixed(1)}" rx="1" fill="${col}"/>`;
+  }).join("");
+  return `<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none">${parts}</svg>`;
+}
 function volatilityLevel(a) { return a.vol < 0.12 ? "LOW" : a.vol < 0.25 ? "MEDIUM" : "HIGH"; }
 function sentimentFor(a) {
   const h = a.history;
@@ -3080,12 +4168,70 @@ function portfolioSummary() {
   const sectors = Object.entries(exposure).sort((a,b)=>b[1]-a[1]).map(([s,v])=>`${s} ${Math.round(v/value*100)}%`).join(" · ") || "None";
   return { invested, value, pnl, daily, sectors, ratio, cryptoRatio: 100-ratio };
 }
+function treemapHoldings() {
+  const out = [];
+  Object.entries(G.market.portfolio.stocks || {}).forEach(([t, q]) => {
+    const a = findMarketAsset(t);
+    if (a && q > 0) out.push({ ticker: t, name: a.name, qty: q, value: a.price * q, change: a.change, group: "stocks" });
+  });
+  Object.entries(G.market.portfolio.crypto || {}).forEach(([t, q]) => {
+    const a = findMarketAsset(t);
+    if (a && q > 0) out.push({ ticker: t, name: a.name, qty: q, value: a.price * q, change: a.change, group: "crypto" });
+  });
+  return out;
+}
+
+// Flat treemap: every holding in one map. Stocks use deep green/red,
+// crypto uses lighter shades of the same semantics.
+function treemapShade(h) {
+  const ch = Number(h.change) || 0;
+  const k = 30 + Math.min(1, Math.abs(ch) / 5) * 50;
+  if (h.group === "crypto") {
+    if (ch > 0) return { bg: `color-mix(in srgb, #4ade80 ${k}%, transparent)`, fg: "#4ade80" };
+    if (ch < 0) return { bg: `color-mix(in srgb, #fb7182 ${k}%, transparent)`, fg: "#fb7182" };
+  } else {
+    if (ch > 0) return { bg: `color-mix(in srgb, #16a34a ${k}%, transparent)`, fg: "#30d158" };
+    if (ch < 0) return { bg: `color-mix(in srgb, #dc2626 ${k}%, transparent)`, fg: "#ff3b30" };
+  }
+  return { bg: `color-mix(in srgb, var(--ink) 12%, transparent)`, fg: "var(--ink2)" };
+}
+
+function treemapCell(h) {
+  const ch = Number(h.change) || 0;
+  const s = treemapShade(h);
+  return `<div onclick="treemapOpen('${h.ticker}')" title="${h.name} · ${h.group === "crypto" ? "Crypto" : "Stock"}" style="background:${s.bg};border-radius:8px;padding:6px;font-size:10px;color:var(--ink);overflow:hidden;cursor:pointer;min-height:34px"><strong>${h.ticker}</strong><br><span style="font-size:9px">${money(h.value)} · <span style="color:${s.fg}">${ch >= 0 ? "+" : ""}${ch.toFixed(1)}%</span></span></div>`;
+}
+
+// Slice-and-dice: split by value around the half, alternate direction.
+function treemapLayout(nodes, horizontal) {
+  if (nodes.length === 1) return treemapCell(nodes[0]);
+  const total = nodes.reduce((s, n) => s + n.value, 0) || 1;
+  let acc = 0, cut = 1;
+  for (let i = 0; i < nodes.length; i++) {
+    acc += nodes[i].value;
+    if (acc >= total / 2) { cut = i + 1; break; }
+  }
+  cut = Math.max(1, Math.min(nodes.length - 1, cut));
+  const dir = horizontal ? "row" : "column";
+  return `<div style="display:flex;flex-direction:${dir};gap:2px;flex:1;min-height:0;min-width:0">${treemapLayout(nodes.slice(0, cut), !horizontal)}${treemapLayout(nodes.slice(cut), !horizontal)}</div>`;
+}
+
+function portfolioTreemap() {
+  const all = treemapHoldings().sort((a, b) => b.value - a.value);
+  if (!all.length) return `<div style="color:#888;font-size:11px;padding:6px">No holdings yet — buy stocks or crypto.</div>`;
+  return `<div style="display:flex;align-items:center;gap:10px;margin-bottom:6px"><span style="font-size:10px;color:var(--ink2);font-weight:700">PORTFOLIO</span><span style="font-size:9px;color:var(--ink2)"><span style="color:#30d158">■</span> stocks <span style="color:#4ade80">■</span> crypto</span></div>
+    <div style="display:flex;height:190px">${treemapLayout(all, true)}</div>`;
+}
+
+function treemapOpen(ticker) { selectMarketAsset(ticker); }
+
 function selectMarketAsset(ticker) {
   const a = findMarketAsset(ticker);
   G.market._selected = ticker;
   if (a) G.market._tab = a.sector === "Crypto" ? "crypto" : "stocks";
   renderMarket();
 }
+function clearMarketFilter() { G.market._selected = null; renderMarket(); }
 function toggleWatchlist(ticker) {
   const m=G.market; const i=m.watchlist.indexOf(ticker);
   if(i>=0) m.watchlist.splice(i,1); else m.watchlist.unshift(ticker);
@@ -3248,13 +4394,16 @@ function renderMarketOverview(kind="stocks") {
   const ticker=kind === "crypto" ? [...m.crypto,...m.crypto] : [...m.stocks,...m.stocks];
   const tickerHtml=`<div class="market-ticker"><div class="market-ticker-track">${ticker.map(a => { const cls=a.eventAffected?"event":a.change>0?"up":a.change<0?"down":"flat"; return `<span class="ticker-item ${cls}" onclick="selectMarketAsset('${a.ticker}')"><b>${a.ticker}</b> ${money(a.price)} ${marketArrow(a.change)} ${marketPct(a.change)}</span>`; }).join("")}</div></div>`;
   const selectedForTab=selected && (kind === "crypto" ? selected.sector === "Crypto" : selected.sector !== "Crypto") ? selected : null;
+  const filtered=selectedForTab ? [selectedForTab] : visible;
+  const rightLabel=selectedForTab ? `<button class="menu-btn mini" onclick="clearMarketFilter()">BACK</button>` : (watch.length ? "PINNED" : "ALL ASSETS");
+  const rows=filtered;
   return `${tickerHtml}
-    ${kind === "stocks" ? `<div class="market-title-row"><span>SECTOR INDEX BOARD</span><span style="color:#888">AVG DAILY MOVE</span></div><div class="market-sector-grid">${sectorBoard()}</div>` : ""}
-    <div class="market-title-row"><span>${watch.length ? "WATCHLIST" : (kind === "crypto" ? "CRYPTO MARKET" : "STOCK MARKET")}</span><span>${watch.length ? "PINNED" : "ALL ASSETS"}</span></div>
-    ${visible.map(a => {
+    ${kind === "stocks" && !selectedForTab ? `<div class="market-title-row"><span>SECTOR INDEX BOARD</span><span style="color:#888">AVG DAILY MOVE</span></div><div class="market-sector-grid">${sectorBoard()}</div>` : ""}
+    <div class="market-title-row"><span>${watch.length && !selectedForTab ? "WATCHLIST" : (kind === "crypto" ? "CRYPTO MARKET" : "STOCK MARKET")}</span><span>${rightLabel}</span></div>
+    ${rows.map(a => {
       const held=a.sector==="Crypto"?(m.portfolio.crypto[a.ticker]||0):(m.portfolio.stocks[a.ticker]||0);
       const maxBuy=a.price>0?Math.floor(G.bank/a.price*100)/100:0;
-      return `<div class="market-row ${a.eventAffected?'event-row':''}" onclick="selectMarketAsset('${a.ticker}')"><span class="ticker">${a.ticker}</span><span>${a.name}</span><span>${money(a.price)}</span><span class="${a.change>0?'up':a.change<0?'down':'flat'}">${marketArrow(a.change)} ${marketPct(a.change)}</span><span title="Tap to fill sell-all qty" style="cursor:pointer" onclick="event.stopPropagation();heldMarket('${a.ticker}')">Held ${held}</span><span onclick="event.stopPropagation()" style="display:flex;flex-direction:column;gap:4px"><span style="display:flex;gap:5px;align-items:center"><input class="drug-input" type="number" min="0.01" step="0.01" value="1" id="${a.sector==='Crypto'?'cqty_':'sqty_'}${a.ticker}" style="width:48px"><button class="menu-btn mini" onclick="buyMarket('${a.ticker}')">BUY</button><button class="menu-btn mini" style="background:transparent;border:1px solid #30d158;color:#30d158" onclick="maxBuyMarket('${a.ticker}')">MAX</button></span><span style="display:flex;gap:5px;align-items:center"><button class="menu-btn mini" onclick="sellMarket('${a.ticker}')">SELL</button><button class="menu-btn mini" style="background:transparent;border:1px solid #ff3b30;color:#ff3b30" onclick="maxSellMarket('${a.ticker}')">MAX</button></span></span></div>`;
+      return `<div class="market-row ${a.eventAffected?'event-row':''}" onclick="selectMarketAsset('${a.ticker}')"><span class="ticker">${a.ticker}</span><span>${a.name}</span><span>${money(a.price)}</span><span class="candles">${candlesMini(a)}</span><span class="${a.change>0?'up':a.change<0?'down':'flat'}">${marketArrow(a.change)} ${marketPct(a.change)}</span><span title="Tap to fill sell-all qty" style="cursor:pointer" onclick="event.stopPropagation();heldMarket('${a.ticker}')">Held ${held}</span><span onclick="event.stopPropagation()" style="display:flex;flex-direction:column;gap:4px"><span style="display:flex;gap:5px;align-items:center"><input class="drug-input" type="number" min="0.01" step="0.01" value="1" id="${a.sector==='Crypto'?'cqty_':'sqty_'}${a.ticker}" style="width:48px"><button class="menu-btn mini" onclick="buyMarket('${a.ticker}')">BUY</button><button class="menu-btn mini" style="background:transparent;border:1px solid #30d158;color:#30d158" onclick="maxBuyMarket('${a.ticker}')">MAX</button></span><span style="display:flex;gap:5px;align-items:center"><button class="menu-btn mini" onclick="sellMarket('${a.ticker}')">SELL</button><button class="menu-btn mini" style="background:transparent;border:1px solid #ff3b30;color:#ff3b30" onclick="maxSellMarket('${a.ticker}')">MAX</button></span></span></div>`;
     }).join("")}
     ${selectedForTab ? renderAssetCard(selectedForTab) : `<div class="info-box" style="font-size:10px">Click any ${kind === "crypto" ? "crypto asset" : "stock"} for the full detail card.</div>`}
     <div class="market-title-row"><span>PORTFOLIO SUMMARY</span></div>
@@ -3274,7 +4423,8 @@ function renderMarket() {
   if(activeTab === "bank") {
     content=`<div class="info-box">Cash: $${G.cash.toLocaleString()}<br>Bank Balance: $${G.bank.toLocaleString()}<br>Interest: 5% per day on deposits</div>
       <div class="bank-row"><span style="min-width:70px">Deposit:</span><input class="drug-input" type="number" min="0" id="bankDep" style="width:120px" placeholder="Amount"><button class="menu-btn" style="width:auto;padding:4px 12px" onclick="doBank('deposit')">DEPOSIT</button><button class="menu-btn" style="width:auto;padding:4px 12px" onclick="doBank('depositAll')">ALL</button></div>
-      <div class="bank-row"><span style="min-width:70px">Withdraw:</span><input class="drug-input" type="number" min="0" id="bankWit" style="width:120px" placeholder="Amount"><button class="menu-btn" style="width:auto;padding:4px 12px" onclick="doBank('withdraw')">WITHDRAW</button><button class="menu-btn" style="width:auto;padding:4px 12px" onclick="doBank('withdrawAll')">ALL</button></div>`;
+      <div class="bank-row"><span style="min-width:70px">Withdraw:</span><input class="drug-input" type="number" min="0" id="bankWit" style="width:120px" placeholder="Amount"><button class="menu-btn" style="width:auto;padding:4px 12px" onclick="doBank('withdraw')">WITHDRAW</button><button class="menu-btn" style="width:auto;padding:4px 12px" onclick="doBank('withdrawAll')">ALL</button></div>
+      <div class="title" style="margin-top:8px">PORTFOLIO TREEMAP</div>${portfolioTreemap()}`;
   } else {
     content=renderMarketOverview(activeTab);
   }
@@ -3330,7 +4480,7 @@ function renderDrugMenu(mode) {
   }).join("");
 
   c.innerHTML = `
-    <div class="title">${isBuy ? "BUY DRUGS" : "SELL DRUGS"} - ${CITIES[G.city].name}</div>
+    <div class="title" style="display:flex;align-items:center;justify-content:space-between"><span>${isBuy ? "BUY DRUGS" : "SELL DRUGS"} - ${CITIES[G.city].name}</span><button class="menu-btn" style="width:auto;padding:2px 8px;margin:0;font-size:10px" onclick="renderDrugMenu('${isBuy ? "sell" : "buy"}')">GO TO ${isBuy ? "SELL" : "BUY"}</button></div>
     <div class="drug-row" style="border:none;background:none;color:#888;font-size:11px">
       <span class="drug-name">Drug</span>
       <span class="drug-price">Price</span>
@@ -3882,6 +5032,8 @@ function completeTravel(cityIdx) {
   const days = Math.max(1, Math.ceil(baseDays * (1 - reduction)));
   advanceDate(days);
   checkWantedDecay();
+  tickDeployments(days);
+  G.battery = batteryMax();
   G.city = cityIdx;
   addLog(`Traveled to ${CITIES[cityIdx].name} (+${days} day${days > 1 ? "s" : ""}).`, "neutral");
   randomizePrices();
@@ -3915,7 +5067,7 @@ function renderInventory() {
     ${rows}
     <div class="info-box">
       Pockets: ${totalDrugs() + pocketGunCount()}/${G.maxCapacity} (${pocketGunCount()} gun${pocketGunCount() === 1 ? "" : "s"})<br>
-      ${hasHQ ? `HQ (${G.hq}): ${totalHQDrugs() + gunHQCount()}/${hqCapacity()} (${gunHQCount()} gun${gunHQCount() === 1 ? "" : "s"})<br>` : ""}
+      ${hasHQ ? `HQ (${G.hq}): ${hqUsedSlots()}/${hqCapacity()} (${gunHQCount()} gun${gunHQCount() === 1 ? "" : "s"})<br>` : ""}
       Estimated value: ~$${DRUGS.reduce((s, d, i) => s + G.inventory[i] * G.prices[i], 0).toLocaleString()}
     </div>
     <button class="menu-btn back-btn" onclick="renderSafehouse()">BACK</button>`;
@@ -3930,7 +5082,7 @@ function moveDrugToHQ(idx) {
   const qty = G.inventory[idx];
   if (qty <= 0) return;
   const hqCap = G.hq ? hqCapacity() : G.maxCapacity;
-  const hqSpace = hqCap - totalHQDrugs() - gunHQCount();
+  const hqSpace = hqCap - (G.hq ? hqUsedSlots() : totalHQDrugs() + gunHQCount());
   const move = Math.min(qty, hqSpace);
   if (move <= 0) { addLog("HQ is full!", "bad"); renderInventory(); return; }
   G.inventory[idx] -= move;
@@ -3967,6 +5119,8 @@ function refreshStats() {
       <span class="pock" onclick="goInv()" title="Inventory">🎒 ${totalDrugs()}/${G.maxCapacity}</span>
     </div>`;
   if(window.phoneDate)window.phoneDate();
+  updateBatteryUI();
+  applyPhoneSkin();
 }
 
 function doBank(mode) {
@@ -3997,7 +5151,7 @@ function doBank(mode) {
 }
 
 /* ── stats-bar shortcuts + sleep popup ── */
-function goBank(){ G.tab = "market"; if(G.market) G.market._tab = "bank"; render(); }
+function goBank(){ if(G.market) G.market._tab = "bank"; goTab("market"); }
 function goLoan(){ G.tab = "trap"; render(); renderLoanShark(); }
 function goInv(){ G.tab = "safehouse"; render(); renderInventory(); }
 function hideOverlay(){ const o = document.getElementById("eventOverlay"); if(o) o.style.display = "none"; }
@@ -4034,6 +5188,12 @@ function renderLoanShark() {
     <button class="menu-btn back-btn" onclick="renderTrap()">BACK</button>`;
 }
 
+function checkCrewUnlock() {
+  if (G.debt > 0 || G.crewMsgSent) return;
+  G.crewMsgSent = true;
+  sendMessage("Loan Shark", "now that you debt free time to get your wings, cant do it alone to be a big dog, get you some members", { story: true });
+}
+
 function doLoanPayAll() {
   const amt = Math.min(G.cash, G.debt);
   if (amt <= 0) { addLog("No cash to pay!", "bad"); renderLoanShark(); refreshStats(); return; }
@@ -4042,6 +5202,7 @@ function doLoanPayAll() {
   if (G.debt <= 0) {
     G.debt = 0;
     addLog("DEBT PAID OFF! Loan shark is happy.", "good");
+    checkCrewUnlock();
   } else {
     addLog(`Paid $${amt.toLocaleString()} toward debt.`, "good");
   }
@@ -4056,6 +5217,7 @@ function doLoanPay() {
   if (G.debt <= 0) {
     G.debt = 0;
     addLog("DEBT PAID OFF! Loan shark is happy.", "good");
+    checkCrewUnlock();
   } else {
     addLog(`Paid $${amt.toLocaleString()} toward debt.`, "good");
   }
@@ -4117,6 +5279,10 @@ function processHealingTick() {
 function endDay() {
   advanceDate(1);
   checkWantedDecay();
+  tickDeployments(1);
+  rollJobBoard();
+  if ((G.battery == null ? batteryMax() : G.battery) < batteryMax()) addLog("Phone recharged overnight.", "neutral");
+  G.battery = batteryMax();
   rollTrunkStock();
   rollLotStock();
   updateVirusStatus();
@@ -4166,6 +5332,7 @@ function checkLoanDeadline() {
     G.hp = Math.max(0, G.hp - 50);
     if (G.debt <= 0) addLog(`The stranger took $${taken.toLocaleString()} — debt settled in blood.`, "neutral");
     else addLog(`The stranger took $${taken.toLocaleString()}. You still owe $${G.debt.toLocaleString()}.`, "bad");
+    checkCrewUnlock();
     refreshStats();
     addEventOverlay("COLLECTION DAY", "a stranger was waiting for you outside your door he broke your leg cleanly and ran your pockets", "bad");
   }
